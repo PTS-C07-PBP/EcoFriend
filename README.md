@@ -1,6 +1,6 @@
 # 🍀 EcoFriend 🍀
 
-**Tautan aplikasi EcoFriend**  
+## **Tautan aplikasi EcoFriend**  
 https://ecofriend.herokuapp.com/
 
 **Anggota kelompok C07**
@@ -11,7 +11,7 @@ https://ecofriend.herokuapp.com/
 5. Syifa Mumtaz Wazdy (2106701066)
 6. Valencius Apriady Primayudha (2106750830)
 
-**Cerita aplikasi yang diajukan serta manfaatnya**
+**Cerita aplikasi yang diajukan serta manfaatnya**  
 Diketahui pada tahun 2022, isu perubahan iklim menjadi krusial karena para peneliti memperkirakan bahwa perubahan iklim dapat membahayakan alam dalam beberapa tahun ke depan. Kenaikan suhu bumi yang disebabkan oleh tingginya jejak karbon juga menyebabkan pencairan es berlebih di kutub sehingga permu
 kaan laut naik secara signifikan dan ekosistem di kutub pun turut terganggu. Jejak karbon adalah jumlah emisi atau gas rumah kaca (termasuk karbon dioksida) yang dihasilkan dari berbagai aktivitas manusia dalam kurun waktu tertentu. Seiring dengan membludaknya populasi dan globalisasi, jejak karbon secara otomatis meningkat dan mempengaruhi iklim dunia secara negatif. Salah satu alasan jejak karbon dapat meningkat dengan drastis adalah mayoritas orang tidak mengetahui dan mencermati seberapa merusak kegiatan sehari-hari yang dilakukan. 
 Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi EcoFriend untuk memudahkan para penggunanya dalam menghitung jejak karbon sehingga mengurangi dampak negatif perubahan iklim. Aplikasi ini akan membantu penggunanya menghitung jejak karbon kendaraan pribadi dan melacak penggunaan transportasi umum. Dengan begitu, pengguna diharapkan akan semakin sadar seberapa besar pengaruh penggunaan transportasi umum terhadap pengurangan jejak karbon.
