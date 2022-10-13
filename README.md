@@ -1,6 +1,6 @@
 # 🍀 EcoFriend 🍀
 
-**Tautan aplikasi EcoFriend**
+**Tautan aplikasi EcoFriend**  
 https://ecofriend.herokuapp.com/
 
 **Anggota kelompok C07**
