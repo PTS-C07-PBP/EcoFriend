@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn ecofriend.wsgi --log-file -
+web: gunicorn project_django.wsgi --log-file -
