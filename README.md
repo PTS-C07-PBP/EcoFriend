@@ -17,8 +17,9 @@ Diketahui pada tahun 2022, isu perubahan iklim menjadi krusial karena para penel
 Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi EcoFriend untuk memudahkan para penggunanya dalam menghitung jejak karbon sehingga mengurangi dampak negatif perubahan iklim. Aplikasi ini akan membantu penggunanya menghitung jejak karbon kendaraan pribadi dan melacak penggunaan transportasi umum. Dengan begitu, pengguna diharapkan akan semakin sadar seberapa besar pengaruh penggunaan transportasi umum terhadap pengurangan jejak karbon.
 
 ## Daftar Modul 
-Berikut daftar modul 
-1. News about Current Environmental Issues
+Berikut daftar modul yang diimplementasikan 
+
+1. News about Current Environmental Issues 
 2. Carbon Footprint Tracker
 3. User
     a. Profile (Name, Country, Total Km, Level)
