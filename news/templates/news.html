@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>News about Environmental Issues</title>
+{% endblock meta %}
+
+{% block content %}
+<p>Hello, world!</p>
+
+<form>
+    <table>
+        {% csrf_token %}
+        {{ article_form.as_table }}
+    </table>
+    <input class="btn-add-article" type="submit" value="Add Task" data-bs-dismiss="modal"/>
+</form>
+
+<form>
+    {% csrf_token %}
+    {{ filter_form.filter_region.label_tag }}
+    {{ filter_form.filter_region }}
+</form>
+
+<table id="articles">
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+// Menggabungkan data article dengan sintaks HTML
+function makeArticle(article) {
+    if (article.fields.admin_created) {
+        var html = "<tr><th>Link</th><th>Title</th><th>Date</th><th>Region</th><th>Description</th><th>Delete</th></tr>";
+        html += "<tr id='"+article.pk+"'><td><a href="+article.fields.link+">Article</a></td><td>"+article.fields.title+"</td><td>"+article.fields.date+"</td><td>"+article.fields.region+"</td><td>"+article.fields.description+"</td><td><button onclick='deleteArticle("+article.pk+");'>Delete</button></td></tr>";
+    } else {
+        var html = "<tr><th>Image</th><th>Link</th><th>Title</th><th>Date</th><th>Region</th><th>Description</th></tr>";
+        html += "<tr id='"+article.pk+"'><td><img src="+article.fields.image+"></td><td><a href="+article.fields.link+">Article</a></td><td>"+article.fields.title+"</td><td>"+article.fields.date+"</td><td>"+article.fields.region+"</td><td>"+article.fields.description+"</td></tr>";
+    }
+    return html;
+}
+
+// Menambah 10 article dan pagination
+function add_articles(page_num) {
+    $.get("/news/articles/", {'region':$('#id_filter_region').val(), 'page_num':page_num}, function(data) {
+        $('#articles').html('');
+        $.each(data[0], function(index, article) {
+            $('#articles').append(makeArticle(article));
+        });
+        for (var page_num = 1; page_num <= data[1]; page_num++) {
+            $('#articles').append("<button onclick='paginate("+page_num+");'>"+page_num+"</button>");
+        }
+    });
+}
+    
+// Get article saat load
+$(document).ready(function(){
+    $.get("/news/init/", function(data) {
+        $.each(data[0], function(index, article) {
+            $('#articles').append(makeArticle(article));
+        });
+        for (var page_num = 1; page_num <= data[1]; page_num++) {
+            $('#articles').append("<button onclick='paginate("+page_num+");'>"+page_num+"</button>");
+        }
+    });
+});
+
+// Filter article sesuai region
+$('#id_filter_region').change(function() {
+    add_articles(1);
+});
+
+// Fungsi saat menekan pagination
+function paginate(page_num) {
+    add_articles(page_num);
+}
+
+// Menambah article baru khusus admin
+$(".btn-add-article").click(function(e) {
+    e.preventDefault();
+    $.post("/news/add/", {title: $('#id_title').val(), region: $('#id_region').val(), description: $('#id_description').val(), csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}, function(data) {
+        add_articles(1);
+    });
+});
+
+// Menghapus article yang dibuat admin
+function deleteArticle(pk) {
+    $.ajax({
+        url: "/news/delete/"+pk,
+        method: "DELETE",
+        dataType: "json",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+        },
+        success: function(data) {
+            add_articles(1);
+        }
+    });
+}
+</script>
+{% endblock content %}
