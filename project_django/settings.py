@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ecofriend',
     'news',
     'tracker',
+    'caloriesburned',
 ]
 
 MIDDLEWARE = [
