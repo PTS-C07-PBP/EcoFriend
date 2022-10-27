@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
 
@@ -10,14 +10,19 @@ from .forms import *
 from datetime import datetime
 
 # Paginator
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 
 # Menampilkan template
 def news(request):
     global article_index
     filter_form = FilterForm()
     article_form = ArticleForm()
-    context = {'filter_form': filter_form, 'article_form': article_form}
+
+    context = {
+        'user': request.user,
+        'filter_form': filter_form, 
+        'article_form': article_form
+        }
     return render(request, 'news.html', context)
 
 # Scrapping website UN News
@@ -25,6 +30,11 @@ def scrapping_web_un():
     # Inspiration: https://www.geeksforgeeks.org/extract-json-from-html-using-beautifulsoup-in-python/
     # Cek apakah data article atau tidak
     first_time = not Article.objects.exists()
+    latest_article = ''
+    # Menyimpan objek article yang belum di-update
+    if not first_time:
+        latest_article = Article.objects.filter(admin_created=False).order_by("-date")[0]
+
     # Load data dari halaman 1-8
     for index in range(0, 8):
         if index == 0:
@@ -54,9 +64,6 @@ def scrapping_web_un():
                     article_obj = Article(admin_created=False, image=image, link=link, title=title, date=date, region=region, description=description)
                     article_obj.save()
                 else:
-                    # Menyimpan objek article yang belum di-update
-                    latest_article = Article.objects.filter(admin_created=False).order_by("-date")[0]
-
                     if latest_article.title != title:
                         article_obj = Article(admin_created=False, image=image, link=link, title=title, date=date, region=region, description=description)
                         article_obj.save()
@@ -69,16 +76,16 @@ def scrapping_web_un():
 def init_articles(request):
     if request.method == 'GET':
         # Mengambil data dari website UN News
-        #Article.objects.all().delete()
-        scrapping_web_un()
+        try:
+            scrapping_web_un()
+        finally:
+            # Membuat paginator
+            articles = Article.objects.order_by("-date")
+            paginator = Paginator(articles, 10)
+            page_end = paginator.num_pages
 
-        # Membuat paginator
-        articles = Article.objects.order_by("-date")
-        paginator = Paginator(articles, 10)
-        page_end = paginator.num_pages
-
-        articles = Article.objects.order_by("-date")[0:10]
-        return HttpResponse("["+serializers.serialize("json", articles)+", "+str(page_end)+"]", content_type="application/json")
+            articles = Article.objects.order_by("-date")[0:10]
+            return HttpResponse("["+serializers.serialize("json", articles)+", "+str(page_end)+"]", content_type="application/json")
     return HttpResponse('')
 
 # Menampilkan article sesuai region berbentuk json
@@ -131,6 +138,11 @@ def delete_article(request, id):
         return HttpResponse(serializers.serialize("json", articles), content_type="application/json")
     return HttpResponse('')
 
+# Reset article
+def reset(request):
+    Article.objects.all().delete()
+    return redirect("news:news")
+    
 def json(request):
     if request.method == 'GET':
         articles = Article.objects.all().order_by("-date")
