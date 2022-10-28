@@ -38,7 +38,7 @@ def show_review_ajax(request):
     return render(request, "review_ajax.html", context)
 
 def show_json(request):
-    data = Review.objects.filter(user=request.user).all()
+    data = Review.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def add_review(request):
@@ -54,5 +54,7 @@ def add_review(request):
             user=request.user,
         )
         new_review.save()
-    return HttpResponse(serializers.serialize("json", new_review))
+
+        review = Review.objects.filter(pk=new_review.pk)
+        return HttpResponse(serializers.serialize("json", review), content_type="application/json")
  
