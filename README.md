@@ -25,7 +25,7 @@ Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi 
 
 2. Carbon Footprint Tracker (Transportasi)  
 
-   Penjelasan singkat: Tempat yang akan digunakan untuk menginput jarak yang ditempuh dengan berbagai sarana, seperti mengendarai keadaan pribadi atau menaiki kendaraan umum. Halaman ini kemudian akan menampilkan history hasil setiap kali user melakukan input yang hasil data inputnya akan digunakan oleh modul lain yang berkaitan.   
+   Penjelasan singkat: Tempat yang akan digunakan untuk menginput jarak yang ditempuh dengan berbagai sarana, seperti mengendarai keadaan pribadi. Halaman ini kemudian akan menampilkan history hasil setiap kali user melakukan input yang hasil data inputnya akan digunakan oleh modul lain yang berkaitan.   
     Dikerjakan oleh: Rahma
 
 3. Ranking 
