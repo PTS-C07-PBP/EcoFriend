@@ -1,98 +1,85 @@
-<!doctype html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-  <head>
+{% block meta %}
+<title>Tracker</title>
+{% endblock meta %}  
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block content %}
 
-    {% block meta %}
-    <title>Tracker</title>
-    {% endblock meta %}  
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    
-  </head>
+<link rel="stylesheet" href="{% static 'css/tracker_style.css' %}">
+<script src="{% static 'js/tracker.js' %}"></script>
 
-  <body>
+<div class = "tracker" align="center">
 
-    {% block content %}
+  <h1>Carbon Footprint Tracker</h1>
 
-    <div class = "tracker" align="center" style="margin-top:10%" max-width:"100%" width="50%">
+  {% if user.is_authenticated %}
+    <form id="form" onsubmit="return false;">
+      {% csrf_token %}
+      <label>How far did you travel? (in kilometer)</label><br>
+      <input type="text" id="mileage" name="mileage"></input><br>
 
-      <h1>Carbon Footprint Tracker</h1>
+      <label>What transportation did you use?</label><br>
 
-      <form id="form" onsubmit="return false;">
-          {% csrf_token %}
-          <label>How far did you travel? (in meter)</label><br>
-          <input type="text" style="margin-top:1%;margin-bottom:2%" id="mileage" name="mileage"></input><br>
-
-          <label>What transportation did you use?</label><br>
-
-          <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="margin-top:1%;margin-bottom:2%">
-              <input type="radio" class="btn-check" name="btnradio" id="mobil" autocomplete="off" value="mobil" checked>
-              <label class="btn btn-outline-primary" for="mobil">Car</label>
-              
-              <input type="radio" class="btn-check" name="btnradio" id="motor" autocomplete="off" value="motor">
-              <label class="btn btn-outline-primary" for="motor">Motorcycle</label>
-              
-              <input type="radio" class="btn-check" name="btnradio" id="jalan" autocomplete="off" value="jalan">
-              <label class="btn btn-outline-primary" for="jalan">On foot</label>
-          </div>
-          <br>
-          <input class="btn btn-primary" id="button" type="submit" value="Add">
-      </form>
-  
-      <table id="table" style="margin-top:2%;margin-bottom:5%"></table>
-  
-      {% if messages %}
-          <ul>
-              {% for message in messages %}
-                  <li>{{ message }}</li>
-              {% endfor %}
-          </ul>
-      {% endif %}   
-    
-    </div>
-
-    <script>
-      async function getHistory() {
-          return fetch("{% url 'tracker:show_history' %}").then((res) => res.json())
-      }
-      
-      async function refreshHistory() {
-        document.getElementById("table").innerHTML = ""
-        const history = await getHistory()
-        let htmlString = `<tr>
-        <th>Date Added</th>
-        <th>Mileage (in meter)</th>
-        <th>Carbon Footprint (in gram)</th>
-        </tr>`
-        history.forEach((item) => {
-        htmlString += `\n<tr>
-        <th>${item.fields.datetime_show}</th>
-        <th>${item.fields.mileage}</th>
-        <th>${item.fields.carbon}</th>
-        </tr>` 
-        })
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="mobil" autocomplete="off" value="mobil" checked>
+        <label class="btn btn-outline" for="mobil">Car</label>
         
-        document.getElementById("table").innerHTML = htmlString
-      }
-      
-      function addFootprint() {
-        fetch("{% url 'tracker:add_footprint' %}", {
-            method: "POST",
-            body: new FormData(document.querySelector('#form'))
-      }).then(refreshHistory).then(document.getElementById('mileage').value = "")
-        return false
-      }
-      
-      document.getElementById("button").onclick = addFootprint
-      refreshHistory()
+        <input type="radio" class="btn-check" name="btnradio" id="motor" autocomplete="off" value="motor">
+        <label class="btn btn-outline" for="motor">Motorcycle</label>
+        
+        <input type="radio" class="btn-check" name="btnradio" id="jalan" autocomplete="off" value="jalan">
+        <label class="btn btn-outline" for="jalan">On foot</label>
+      </div>
+      <br>
+      <input class="btn" id="button" type="submit" value="Add">
+    </form>
 
-    </script>
+    <table id="table"></table>
 
-    {% endblock content %}
+    <button class="btn" style="margin:1%;"><a style="text-decoration:none" href="{% url 'tracker:logout' %}">Logout</a></button>
+  
+  {%else%}
+  <h3>Login to track your carbon footprint!</h3><br>
+  
+  {% endif %}
+</div>
 
-  </body>
-</html>
+<script>
+  async function getHistory() {
+    return fetch("{% url 'tracker:show_history' %}").then((res) => res.json())
+}
+async function refreshHistory() {
+    document.getElementById("table").innerHTML = ""
+    const history = await getHistory()
+    let htmlString = `<tr>
+    <th>Date Added</th>
+    <th>Mileage (in kilometer)</th>
+    <th>Carbon Footprint (in kilogram)</th>
+    </tr>`
+    history.forEach((item) => {
+    htmlString += `\n<tr>
+    <th>${item.fields.datetime_show}</th>
+    <th>${item.fields.mileage}</th>
+    <th>${item.fields.carbon}</th>
+    </tr>` 
+    })
+    
+    document.getElementById("table").innerHTML = htmlString
+}
+  
+function addFootprint() {
+    fetch("{% url 'tracker:add_footprint' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#form'))
+    }).then(refreshHistory).then(document.getElementById('mileage').value = "")
+    return false
+}
+
+document.getElementById("button").onclick = addFootprint
+refreshHistory()
+
+</script>
+
+{% endblock content %}
