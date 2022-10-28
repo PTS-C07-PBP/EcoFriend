@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <style>
+  
+        .card {
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+          transition: 0.3s;
+          width: 40%;    
+          border-radius: 5px;
+        }
+        
+        .card:hover {
+          transform: scale(1.05);
+          box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);    
+        }
+        
+        .container {
+          padding: 2px 16px;
+        }
+      
+        .content {
+          padding-left: 20px;
+          padding-right: 20px;
+      }
+        .navbar-custom {
+          background-color:#F6F6F2;
+      }
+        body {
+          background: linear-gradient(-45deg, #388087, #6FB3B8, #BADFE7, #C2EDCE);
+          background-size: 400% 400%;
+          animation: gradient 15s ease infinite;
+          height: 100vh;
+        }
+      
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+        
+      </style>
+  </head>
+
+  <body>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    {% block content %}
+
+    <div class = "add review" style="margin-top:3%" max-width:"100%" width="50%">
+      
+      <div class="card-deck" id="deck" max-width:"100%" width="50%">
+      </div>
+
+      <script>
+        function posting(e) {
+          e.preventDefault()
+          const title = $("#title").val()
+          const rating = $("#rating").val()
+          const description = $("#description").val()
+          
+          const data = {
+            title: title,
+            rating: rating,
+            description: description,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          }
+          
+          $.ajax({
+            type: 'POST',
+            url: '{% url "review:add_review" %}',
+            data: data, 
+            dataType: 'json',
+            success: function (data){$.each(data, function(index, review) {
+            $('#main-div').append(`
+            
+            <div class="card col-sm-4 mb-1 mt-4 mx-auto" style="width: 18rem;">
+              <div class="card-body">
+                <h4 class="card-title text-center fw-semibold">${review.fields.title}</h4>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item text-secondary">${review.fields.date}</li>
+                  <li class="list-group-item text-secondary">${review.fields.rating}</li>
+                  <li class="list-group-item">${review.fields.description}</li>
+                </ul>
+              </div>
+              <div class="card-footer text-center">
+                <p style="font-weight:bold; color:${color};">${message}</p>
+              </div>
+            </div>
+          `)})
+          
+            }}),
+
+          fetchData();
+        }
+      
+        function update(data) {
+          const myElement = $("#main-div")
+          myElement.html('');
+          for (let i = 0; i < data.length; i++) {
+            myElement.append(`
+            
+              <div class="card col-sm-4 mb-1 mt-4 mx-auto" style="width: 18rem;">
+                <div class="card-body">
+                  <h4 class="card-title text-center fw-semibold">${data[i].fields.title}</h4>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-secondary">${data[i].fields.date}</li>
+                    <li class="list-group-item text-secondary">${data[i].fields.rating}</li>
+                    <li class="list-group-item">${data[i].fields.description}</li>
+                  </ul>
+                </div>
+                <div class="card-footer text-center">
+                  <p style="font-weight:bold; color:${color};">${message}</p>
+                </div>
+              </div>
+            `)
+          }
+        }
+      
+        function fetchData() {
+          $.get("/review/json", update)
+        }
+      
+        $(document).ready(() => {
+          $("#create-button").click(posting)
+          fetchData()
+        })
+    </script>
+
+        <div class="navbar navbar-custom mb-4">
+            <div class="container-fluid justify-content-center">
+                <h1 class="navbar-brand" href="#">Our App Review!</h1>
+            </div>
+        </div>
+      
+        <div class="content w-100 mx-auto">
+            <div class="header text-center mx-auto">
+                <button type="button" class="btn-dark" style="margin:1%;" data-toggle="modal" data-target="#addReview"><a style="text-decoration:none">Add</a></button>
+            </div>
+        </div>
+      
+      <div class="row row-cols-1 row-cols-md-3 g-4 md:justify-end gap-4" id="main-div"></div>
+      
+      <div class="modal fade modal-dialog modal-dialog-centered" id="addReview" tabindex="-1" aria-labelledby="addReviewLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Review</h1>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="" style="display: inline-block;">
+                        {% csrf_token %}
+                        <table>
+                        <tr>
+                            <label>Title</label>
+                            <input type="text" name="title" id="title">
+                        </tr><br>
+                        <tr>
+                          <label for="rating">Rating:</label>
+                          <select name="rating" id="rating">
+                            <option value=1>1</option>
+                            <option value=2>2</option>
+                            <option value=3>3</option>
+                            <option value=4>4</option>
+                            <option value=5>5</option>
+                          </select>    
+                        </label>
+                        </tr><br>
+                        <tr>
+                            <label>Description</label>
+                            <input type="textarea" name="description" id="description">
+                        </tr>
+                            <td colspan="2">
+                                <input data-bs-dismiss="modal" style="width: 100%; margin-top: 20px; margin-bottom: 7px;" class="btn btn btn-dark" type="submit" name="submit" value="Create" id="create-button">
+                            </td>
+                        </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    {% endblock content %}
+
+  </body>
+</html>
