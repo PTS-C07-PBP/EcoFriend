@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'example_app',
     'ecofriend',
     'news',
+    'user',
 ]
 
 MIDDLEWARE = [
