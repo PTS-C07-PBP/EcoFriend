@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime
 from tracker.models import Footprint
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.urls import reverse
 from django.shortcuts import render, redirect
@@ -20,39 +20,29 @@ def show_history(request):
     history = Footprint.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', history))
 
-# def show_history(request):
-#     history = Footprint.objects.filter(user=request.user)
-#     context = {
-#          # "list_task": data_task_item,
-#         "task_user" : request.user,
-#         "last_login": request.COOKIES['last_login']
-#     }
-#     return render(request, "todolist.html", context)
-
 def add_footprint(request):
     if request.method == 'POST':
         user = request.user
-        date = datetime.datetime.now()
+        nowvar = datetime.now()
+        date_str = nowvar.strftime("%H:%M %b %d, %Y")
+        date = datetime.strptime(date_str, "%H:%M %b %d, %Y")
+        
         mileage = request.POST.get('mileage')
-        # type = request.POST['btnradio']
         type = request.POST.get('btnradio')
         carbon = mileage
         on = False
+        
         if type == "mobil":
-            carbon = carbon*17
-        elif type == "jalan":
+            carbon = str(int(mileage) * 17)
+        if type == "jalan":
             carbon = 0
             on = True
         
         # membuat objek baru berdasarkan model dan menyimpannya ke database
-        new_footprint = Footprint(user=user, date = date, mileage = mileage, carbon = carbon, onFoot = on)
+        new_footprint = Footprint(user=user, datetime=date, datetime_show=date_str, mileage = mileage, carbon = carbon, onFoot = on)
         new_footprint.save()
         
-        context = {
-            "task_user" : request.user,
-            "last_login": request.COOKIES['last_login']  
-        }
-        return render(request, 'tracker.html', context) 
+        return render(request, 'tracker.html')
 
     return render(request, 'tracker.html')
 
