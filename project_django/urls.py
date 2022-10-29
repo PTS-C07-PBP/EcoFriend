@@ -21,5 +21,5 @@ urlpatterns = [
     path('review/', include('review.urls')),
     path('', include('news.urls')),
     path('tracker/', include('tracker.urls')),
-    path('news/', include('news.urls')),
+    path('user/', include('user.urls')),
 ]
