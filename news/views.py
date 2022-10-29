@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
 # Web Scrapping
@@ -10,14 +10,28 @@ from .forms import *
 from datetime import datetime
 
 # Paginator
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
+
+# Restriksi fungsi untuk admin
+from django.contrib.auth.decorators import login_required
 
 # Menampilkan template
 def news(request):
-    global article_index
     filter_form = FilterForm()
     article_form = ArticleForm()
-    context = {'filter_form': filter_form, 'article_form': article_form}
+    # Jumlah article yang dibuat admin
+    try:
+        request.session['num_created_articles'] = len(Article.objects.filter(user=request.user))
+        num_created_articles = request.session['num_created_articles']
+    except:
+        num_created_articles = 0
+
+    context = {
+        'current_user': request.user,
+        'filter_form': filter_form, 
+        'article_form': article_form,
+        'num_created_articles': num_created_articles
+        }
     return render(request, 'news.html', context)
 
 # Scrapping website UN News
@@ -25,6 +39,11 @@ def scrapping_web_un():
     # Inspiration: https://www.geeksforgeeks.org/extract-json-from-html-using-beautifulsoup-in-python/
     # Cek apakah data article atau tidak
     first_time = not Article.objects.exists()
+    latest_article = ''
+    # Menyimpan objek article yang belum di-update
+    if not first_time:
+        latest_article = Article.objects.filter(admin_created=False).order_by("-date")[0]
+
     # Load data dari halaman 1-8
     for index in range(0, 8):
         if index == 0:
@@ -54,9 +73,6 @@ def scrapping_web_un():
                     article_obj = Article(admin_created=False, image=image, link=link, title=title, date=date, region=region, description=description)
                     article_obj.save()
                 else:
-                    # Menyimpan objek article yang belum di-update
-                    latest_article = Article.objects.filter(admin_created=False).order_by("-date")[0]
-
                     if latest_article.title != title:
                         article_obj = Article(admin_created=False, image=image, link=link, title=title, date=date, region=region, description=description)
                         article_obj.save()
@@ -69,16 +85,16 @@ def scrapping_web_un():
 def init_articles(request):
     if request.method == 'GET':
         # Mengambil data dari website UN News
-        #Article.objects.all().delete()
-        scrapping_web_un()
+        try:
+            scrapping_web_un()
+        finally:
+            # Membuat paginator
+            articles = Article.objects.order_by("-date")
+            paginator = Paginator(articles, 10)
+            page_end = paginator.num_pages
 
-        # Membuat paginator
-        articles = Article.objects.order_by("-date")
-        paginator = Paginator(articles, 10)
-        page_end = paginator.num_pages
-
-        articles = Article.objects.order_by("-date")[0:10]
-        return HttpResponse("["+serializers.serialize("json", articles)+", "+str(page_end)+"]", content_type="application/json")
+            articles = Article.objects.order_by("-date")[0:10]
+            return HttpResponse("["+serializers.serialize("json", articles)+", "+str(page_end)+"]", content_type="application/json")
     return HttpResponse('')
 
 # Menampilkan article sesuai region berbentuk json
@@ -107,10 +123,12 @@ def show_articles(request):
     return HttpResponse('')
 
 # Menambah article
+@login_required(login_url='/tracker/login/')
 def add_article(request):
     if request.method == "POST":
         form = ArticleForm()
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.admin_created = True
         instance.image = ""
         instance.link = ""
@@ -118,19 +136,39 @@ def add_article(request):
         instance.region = " ".join(word.capitalize() for word in request.POST.get('region').split(" "))
         instance.description = request.POST.get('description')
         instance.save()
-        return HttpResponse('')
+
+        # Menambah counter article yang dibuat
+        try:
+            request.session['num_created_articles'] = request.session['num_created_articles'] + 1
+            return JsonResponse(request.session['num_created_articles'], safe=False)
+        except:
+            return JsonResponse(0, safe=False)
     return HttpResponse('')
 
 # Delete article
+@login_required(login_url='/tracker/login/')
 def delete_article(request, id):
     if request.method == "DELETE":
         article = Article.objects.get(pk=id)
         article.delete()
 
-        articles = Article.objects.all().order_by("-date")[0:2]
-        return HttpResponse(serializers.serialize("json", articles), content_type="application/json")
+        # Mengurangi counter article yang dibuat
+        try:
+            request.session['num_created_articles'] = request.session['num_created_articles'] - 1
+            return JsonResponse(request.session['num_created_articles'], safe=False)
+        except:
+            return JsonResponse(0, safe=False)
     return HttpResponse('')
 
+# Reset article
+@login_required(login_url='/tracker/login/')
+def reset(request):
+    Article.objects.all().delete()
+    try:
+        request.session['num_created_articles'] = 0
+    finally:
+        return redirect("news:news")
+    
 def json(request):
     if request.method == 'GET':
         articles = Article.objects.all().order_by("-date")

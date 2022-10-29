@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Tracker</title>
+{% endblock meta %}  
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/tracker_style.css' %}">
+<script src="{% static 'js/tracker.js' %}"></script>
+
+<div class = "tracker" align="center">
+
+  <h1>Carbon Footprint Tracker</h1>
+
+  {% if user.is_authenticated %}
+    <form id="form" onsubmit="return false;">
+      {% csrf_token %}
+      <label>How far did you travel? (in kilometer)</label><br>
+      <input type="text" id="mileage" name="mileage"></input><br>
+
+      <label>What transportation did you use?</label><br>
+
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="mobil" autocomplete="off" value="mobil" checked>
+        <label class="btn btn-outline" for="mobil">Car</label>
+        
+        <input type="radio" class="btn-check" name="btnradio" id="motor" autocomplete="off" value="motor">
+        <label class="btn btn-outline" for="motor">Motorcycle</label>
+        
+        <input type="radio" class="btn-check" name="btnradio" id="jalan" autocomplete="off" value="jalan">
+        <label class="btn btn-outline" for="jalan">On foot</label>
+      </div>
+      <br>
+      <input class="btn" id="button" type="submit" value="Add">
+    </form>
+
+    <table id="table"></table>
+
+    <button class="btn" style="margin:1%;"><a style="text-decoration:none" href="{% url 'tracker:logout' %}">Logout</a></button>
+  
+  {%else%}
+  <h3>Login to track your carbon footprint!</h3><br>
+  
+  {% endif %}
+</div>
+
+<script>
+  async function getHistory() {
+    return fetch("{% url 'tracker:show_history' %}").then((res) => res.json())
+}
+async function refreshHistory() {
+    document.getElementById("table").innerHTML = ""
+    const history = await getHistory()
+    let htmlString = `<tr>
+    <th>Date Added</th>
+    <th>Mileage (in kilometer)</th>
+    <th>Carbon Footprint (in kilogram)</th>
+    </tr>`
+    history.forEach((item) => {
+    htmlString += `\n<tr>
+    <th>${item.fields.datetime_show}</th>
+    <th>${item.fields.mileage}</th>
+    <th>${item.fields.carbon}</th>
+    </tr>` 
+    })
+    
+    document.getElementById("table").innerHTML = htmlString
+}
+  
+function addFootprint() {
+    fetch("{% url 'tracker:add_footprint' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#form'))
+    }).then(refreshHistory).then(document.getElementById('mileage').value = "")
+    return false
+}
+
+document.getElementById("button").onclick = addFootprint
+refreshHistory()
+
+</script>
+
+{% endblock content %}
