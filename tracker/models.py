@@ -8,3 +8,4 @@ class Footprint(models.Model):
     carbon = models.FloatField()
     onFoot = models.BooleanField()
     datetime_show = models.TextField(blank=True, null=True)
+    to_order = models.FloatField(blank=True, null=True)
