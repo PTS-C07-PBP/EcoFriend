@@ -1,24 +1,20 @@
-from enum import unique
 from django import forms
 from . import models
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.hashers import make_password
 
 
 # Form membuat User
 class RegistrationForm(UserCreationForm):
-
-    def __init__(self, *args, **kwargs):
-        super(RegistrationForm, self).__init__(*args, **kwargs)
-
     email = forms.EmailField(required=True)
-    username = forms.CharField(max_length=20, required=True)
-    first_name = forms.CharField(max_length=20)
-    last_name = forms.CharField(max_length=20)
+    # username = forms.CharField(max_length=20, required=True)
+    # first_name = forms.CharField(max_length=20)
+    # last_name = forms.CharField(max_length=20)
 
     class Meta:
-        model = models.User
+        model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2',]
     
     def save(self, commit=True):

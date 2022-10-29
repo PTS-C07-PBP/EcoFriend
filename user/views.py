@@ -4,7 +4,6 @@ from user.models import *
 from user.forms import RegistrationForm
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -19,7 +18,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Akun telah berhasil dibuat!')
-            return redirect('user:login')
+            return redirect('user:login_user')
     
     context = {'form':form}
     return render(request, 'register.html', context)
@@ -39,12 +38,14 @@ def login_user(request):
     context = {}
     return render(request, 'login.html', context)
 
+# 
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse("news:news"))
     response.delete_cookie('last_login')
     return response
 
+# Menunjukkan profile user
 @login_required(login_url='/user/login/')
 def user_profile(request):
     context = {'user': request.user}

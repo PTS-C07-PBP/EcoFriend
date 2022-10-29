@@ -1,4 +1,7 @@
 <!doctype html>
+{% extends 'base.html' %}
+{% load static %}
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -9,6 +12,8 @@
     {% endblock meta %}
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/tracker_style.css' %}">
+    <script src="{% static 'js/tracker.js' %}"></script>
 
   </head>
 </html>
@@ -16,26 +21,21 @@
 {% block content %}
 
 <div class = "profile" align="center" style="margin-top:5%" max-width:"100%" width="50%">
-    <h1>You are logged in as {{user.username}}</h1>  
-
-        <form method="POST" >  
-            {% csrf_token %}  
-            <table>  
-                {{ form.as_table }}  
-                <tr>  
-                    <td></td>
-                    <td><input class="btn btn-outline-primary" style="margin-top:8px center" type="submit" value="Register"></td>
-                </tr>  
-            </table>  
-        </form>
-
-    {% if messages %}  
-        <ul>   
-            {% for message in messages %}  
-                <li>{{ message }}</li>  
-                {% endfor %}  
-        </ul>   
-    {% endif %}
+    <div class="container center mt-4 pt-4 mb-4 pb-4">
+    <h1 style="margin-top: 60px;">you're logged in as <span id="tulisan_line">{{ user }}</span></h1>
+    </div>
+    
+    <div class="container center mb-4 pb-4">
+            <div id="tulisan_profil ">
+                    <p><b>Username:</b> &emsp; {{ user }}</p>
+                    <p><b>First name:</b> &emsp; {{ user.first_name }}</p>
+                    <p><b>Last name:</b> &emsp; {{ user.last_name }}</p>
+                    <p><b>Email: </b>&emsp; &emsp; {{ user.email }}</p>
+                    <p><b>Calories Burned: </b>&emsp; &emsp; {{ user.calories }}</p>
+                    <p><b>Your carbon Footprint: </b>&emsp; &emsp; {{ user.carbon }}</p>
+            </div>
+    </div>
+        
 
 </div>  
 
