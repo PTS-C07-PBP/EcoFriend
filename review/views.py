@@ -57,6 +57,8 @@ def add_review(request):
         )
         new_review.save()
 
-        review = Review.objects.filter(pk=new_review.pk)
-        return HttpResponse(serializers.serialize("json", review), content_type="application/json")
+        review = Review.objects.filter(pk=new_review.pk).values('user__username', 'title', 'description', 'rating', 'user', 'date')
+        return HttpResponse(json.dumps(list(review), indent=4, sort_keys=True, default=str), content_type="application/json")
+
+        # return HttpResponse(serializers.serialize("json", review), content_type="application/json")
  
