@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+import json
 
 # Create your views here.
 from .models import Review
@@ -38,8 +39,9 @@ def show_review_ajax(request):
     return render(request, "review_ajax.html", context)
 
 def show_json(request):
-    data = Review.objects.all()
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    
+    data = Review.objects.values('user__username', 'title', 'description', 'rating', 'user', 'date')
+    return HttpResponse(json.dumps(list(data), indent=4, sort_keys=True, default=str), content_type="application/json")
 
 def add_review(request):
     if request.method == 'POST':
