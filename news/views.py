@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
 # Web Scrapping
@@ -12,16 +12,25 @@ from datetime import datetime
 # Paginator
 from django.core.paginator import Paginator
 
+# Restriksi fungsi untuk admin
+from django.contrib.auth.decorators import login_required
+
 # Menampilkan template
 def news(request):
-    global article_index
     filter_form = FilterForm()
     article_form = ArticleForm()
+    # Jumlah article yang dibuat admin
+    try:
+        request.session['num_created_articles'] = len(Article.objects.filter(user=request.user))
+        num_created_articles = request.session['num_created_articles']
+    except:
+        num_created_articles = 0
 
     context = {
-        'user': request.user,
+        'current_user': request.user,
         'filter_form': filter_form, 
-        'article_form': article_form
+        'article_form': article_form,
+        'num_created_articles': num_created_articles
         }
     return render(request, 'news.html', context)
 
@@ -114,10 +123,12 @@ def show_articles(request):
     return HttpResponse('')
 
 # Menambah article
+@login_required(login_url='/tracker/login/')
 def add_article(request):
     if request.method == "POST":
         form = ArticleForm()
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.admin_created = True
         instance.image = ""
         instance.link = ""
@@ -125,23 +136,38 @@ def add_article(request):
         instance.region = " ".join(word.capitalize() for word in request.POST.get('region').split(" "))
         instance.description = request.POST.get('description')
         instance.save()
-        return HttpResponse('')
+
+        # Menambah counter article yang dibuat
+        try:
+            request.session['num_created_articles'] = request.session['num_created_articles'] + 1
+            return JsonResponse(request.session['num_created_articles'], safe=False)
+        except:
+            return JsonResponse(0, safe=False)
     return HttpResponse('')
 
 # Delete article
+@login_required(login_url='/tracker/login/')
 def delete_article(request, id):
     if request.method == "DELETE":
         article = Article.objects.get(pk=id)
         article.delete()
 
-        articles = Article.objects.all().order_by("-date")[0:2]
-        return HttpResponse(serializers.serialize("json", articles), content_type="application/json")
+        # Mengurangi counter article yang dibuat
+        try:
+            request.session['num_created_articles'] = request.session['num_created_articles'] - 1
+            return JsonResponse(request.session['num_created_articles'], safe=False)
+        except:
+            return JsonResponse(0, safe=False)
     return HttpResponse('')
 
 # Reset article
+@login_required(login_url='/tracker/login/')
 def reset(request):
     Article.objects.all().delete()
-    return redirect("news:news")
+    try:
+        request.session['num_created_articles'] = 0
+    finally:
+        return redirect("news:news")
     
 def json(request):
     if request.method == 'GET':

@@ -18,6 +18,10 @@ footer {
     background-color: rgb(0, 252, 151);
 }
 
+.btn:hover, .btn:focus {
+    background-color: rgb(1, 199, 120) !important;
+}
+
 .navbar-brand {
     font-family: 'Lobster', cursive;
     font-size: 30px;
