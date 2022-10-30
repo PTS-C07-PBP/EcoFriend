@@ -1,0 +1,28 @@
+nav {
+    background-color: rgb(0, 252, 151);
+    display: flex;
+    align-content: space-between;
+}
+
+footer {
+    padding: 30px 0px;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.btn {
+    background-color: rgb(0, 252, 151);
+}
+
+.btn:hover, .btn:focus {
+    background-color: rgb(1, 199, 120) !important;
+}
+
+.navbar-brand {
+    font-family: 'Lobster', cursive;
+    font-size: 30px;
+}
