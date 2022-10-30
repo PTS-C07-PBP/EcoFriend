@@ -145,7 +145,7 @@ def add_article(request):
             return JsonResponse(0, safe=False)
     return HttpResponse('')
 
-# Delete article
+# Delete article dengan id
 @login_required(login_url='/tracker/login/')
 def delete_article(request, id):
     if request.method == "DELETE":
