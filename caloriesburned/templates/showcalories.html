@@ -3,35 +3,103 @@
 
 {% block content %}
 
-<h1>PLSSS {{berat}}</h1>
+<style>
+    .flex-zero {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+    }
+    .flex-one{
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+        display: inline-block
+    }
+    #customers {
+        font-family: Arial;
+        border-collapse: collapse;
+        width: 75%;
+    }
+      
+    #customers td, #customers th {
+        border: 2px solid #ddd;
+        padding: 8px;
+    }
+      
+    #customers tr:nth-child(even){background-color: #f2f2f2;}
+      
+    #customers tr:hover {background-color: #90EE90;}
+      
+    #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
 
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Calories Burned</th>
-    </tr>
-    {% for item in list_mileage %}
+
+<div class="flex-zero">
+    <h1>
+        Welcome to your burned caloried tracker {{nama}} &#128516;
+    </h1>
+</div>
+<div class="container">
+    <div id="motive-container">
+
+        <button type="change" id="change-button" name="change-button" onclick="" >change</button>
+
+    </div>
+<div>
+<div class="flex-zero">
+    <h4>
+        The following is data on calories burned from onFoot activities you have done
+    </h4>
+</div>
+
+<div class="flex-zero">
+    <div id="calories-container" style="width: 80%;">
+        <canvas id="calories-chart" data-url="{% url 'caloriesburned:calories_chart' %}"></canvas>
+    </div>
+</div>
+
+<div class ="flex-zero" style="width: 100%">
+    <table id="customers">
         <tr>
-            <th>{{item.date}}</th>
-            {% if item.onFoot %}
-                <th>{{item.mileage|mul:4057.55263}}</th>
-            {% else %}
-                <th>{{item.mileage|mul:0}}</th>
-            {% endif %}
+            <th>Date</th>
+            <th>Calories Burned</th>
         </tr>
-    {% endfor %}
-</table>
+        {% for item in list_mileage %}
+            <tr>
+                <td>{{item.datetime}}</td>
+                {% if item.onFoot %}
+                    <td>{{item.mileage|mul:4057.55263}}</td>
+                {% else %}
+                    <td>{{item.mileage|mul:0}}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 
-<div id="container" style="width: 75%;">
-    <canvas id="calories-chart" data-url="{% url 'caloriesburned:calories_chart' %}"></canvas>
+<div class="flex-zero" style="width: 100%">
+    <form 
+            id="create-motive-form"
+            onsubmit="return false;"
+    >
+        {% csrf_token %}
+        <label for="motive" >Enter Motive: </label>
+        <input type="text" id="motive" name="motive" size="50"/>
+        <button type="submit" id="submit-button" name="submit-button" onclick="" >Submit</button>
+    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-<script>
-    console.log("angga ganteng");
-    $(function(){
 
+<script>
+    $(function(){
         var $caloriesChart = $("#calories-chart");
         $.ajax({
             url: $caloriesChart.data("url"),
@@ -45,7 +113,7 @@
                         labels: data.date,
                         datasets: [{
                             label: 'Calories',
-                            backgroundColor: 'blue',
+                            backgroundColor: 'lightgreen',
                             data: data.calories,
                         }]
                     },
@@ -58,14 +126,48 @@
                             display: true,
                             text: 'Calories Burned Chart'
                         }
+                        
                     }
                 });
 
             }
         });
     });
+
+    const submitButton = document.getElementById('submit-button');
+
+    function addMotivation() {
+        $.post(
+            {
+                url: '../add_motive/',
+                data : {
+                    'motivation': $('#motive').val()
+                },
+            }
+        )
+    }
+    $(`#submit-button`).attr('onclick', `addMotivation()`);
+
+    const changeButton = document.getElementById('change-button');
+
+    function getMotivation() {
+        $.get(
+            '../get_motive/',
+            (res) => {
+                console.log(res)
+                $('#motive-container').empty();
+                $('#motive-container').append(
+                    `
+                    <h3>${res[0].fields.sentences}</h3>
+                    <h5>${res[0].fields.user}</h5>
+                        `
+                )
+            }
+        )
+    }
+    $(`#change-button`).attr('onclick', `getMotivation()`);
+
+
 </script>
-
-
 
 {% endblock %}

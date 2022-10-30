@@ -1,5 +1,8 @@
 from asyncio import constants
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+import json
+import random
+from re import M
+from django.http import Http404, HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from tracker.models import Footprint
@@ -7,8 +10,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 from django.contrib import messages
 from tracker.models import Footprint
-from caloriesburned.models import Person
+from caloriesburned.models import Person, Motive
 from .forms import userWeight
+from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 # Create your views here.
 def show_caloriesburned(request):
@@ -29,30 +34,61 @@ def show_caloriesburned(request):
             response = HttpResponseRedirect(reverse("caloriesburned:show_result"))
             return response
     else:
-        return render(request, 'login.html', {})
+        return render(request, 'loginalert.html', {})
 
 def show_result(request):
     tempat = Person.objects.filter(user=request.user)
-    berat = tempat[0].weight
-    data_mileage = Footprint.objects.all()
+    data_mileage = Footprint.objects.filter(user=request.user)
     context={
         'berat': tempat[0].weight,
+        'nama': request.user,
         'list_mileage': data_mileage,
     }
     return render(request, 'showcalories.html', context)
+
+@csrf_exempt
+def add_motive(request):
+    if request.method == 'POST':
+        sentences = request.POST.get("motivation")
+
+        motive = Motive.objects.create(user=request.user, sentences=sentences)
+
+        return JsonResponse(
+            {
+                "sentences": motive.sentences,
+            }
+        )
+
+@csrf_exempt
+def get_motive(request):
+    if request.method == 'GET':
+        data = Motive.objects.all()
+
+        return HttpResponse( serializers.serialize('json', data),
+            content_type='application/json'
+        )
+
+
+def show_json(request):
+    data = Motive.objects.all()
+    return HttpResponse(serializers.serialize('json', data))
+
 
 def calories_chart(request):
     date = []
     calories = []
 
-    queryset = Footprint.objects.all()
+    queryset = Footprint.objects.filter(user=request.user).order_by('-datetime')
+    count = 0
 
     for items in queryset:
-        date.append(items.date)
-        if items.onFoot:
-            calories.append(items.mileage*4057.55263)
-        else:
-            calories.append(items.mileage*0)
+        if count < 7:
+            date.append(items.datetime)
+            if items.onFoot:
+                calories.append(items.mileage*4057.55263)
+            else:
+                calories.append(items.mileage*0)
+            count += 1
         
     return JsonResponse(data={
         'date': date,
@@ -79,7 +115,3 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse("caloriesburned:login_user"))
     response.delete_cookie('last_login')
     return response
-
-def show_data(request):
-    calories = Footprint.objects.filter(user=request.user)
-    return HttpResponse()
