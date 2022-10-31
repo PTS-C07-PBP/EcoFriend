@@ -1,61 +1,33 @@
-{% extends 'partials/base.html' %}
+{% extends 'base.html' %}
 {% load mathfilters %}
+{% load static %}
+
+{% block meta %}
+<title>Calories Burned</title>
+{% endblock meta %}
+
 
 {% block content %}
-
-<style>
-    .flex-zero {
-        display: flex;
-        justify-content: center;
-        margin: 10px;
-    }
-    .flex-one{
-        display: flex;
-        justify-content: center;
-        margin: 10px;
-        display: inline-block
-    }
-    #customers {
-        font-family: Arial;
-        border-collapse: collapse;
-        width: 75%;
-    }
-      
-    #customers td, #customers th {
-        border: 2px solid #ddd;
-        padding: 8px;
-    }
-      
-    #customers tr:nth-child(even){background-color: #f2f2f2;}
-      
-    #customers tr:hover {background-color: #90EE90;}
-      
-    #customers th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
-        color: white;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/calburned_style.css' %}">
 
 
 <div class="flex-zero">
-    <h1>
-        Welcome to your burned caloried tracker {{nama}} &#128516;
-    </h1>
-</div>
-<div class="container">
-    <div id="motive-container">
-
-        <button type="change" id="change-button" name="change-button" onclick="" >change</button>
+    <div class="tracker">
+        <h1>
+            Welcome to your burned caloried tracker {{nama}}
+        </h1>
 
     </div>
-<div>
-<div class="flex-zero">
-    <h4>
-        The following is data on calories burned from onFoot activities you have done
-    </h4>
+</div>
+
+<div class ="flex-zero">
+    <div class="container">
+        <div id="motive-container">
+        </div>
+        <div class ="flex-zero">
+            <button type="change" id="change-button" name="change-button" onclick="" >change</button>
+        </div>
+    </div>
 </div>
 
 <div class="flex-zero">
@@ -72,11 +44,9 @@
         </tr>
         {% for item in list_mileage %}
             <tr>
-                <td>{{item.datetime}}</td>
                 {% if item.onFoot %}
-                    <td>{{item.mileage|mul:4057.55263}}</td>
-                {% else %}
-                    <td>{{item.mileage|mul:0}}</td>
+                    <td>{{item.datetime}}</td>
+                    <td>{{item.mileage|mul:4057.55263|floatformat:"0"}}</td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -97,77 +67,6 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-
-<script>
-    $(function(){
-        var $caloriesChart = $("#calories-chart");
-        $.ajax({
-            url: $caloriesChart.data("url"),
-            success: function(data){
-
-                var ctx = $caloriesChart[0].getContext("2d");
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.date,
-                        datasets: [{
-                            label: 'Calories',
-                            backgroundColor: 'lightgreen',
-                            data: data.calories,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Calories Burned Chart'
-                        }
-                        
-                    }
-                });
-
-            }
-        });
-    });
-
-    const submitButton = document.getElementById('submit-button');
-
-    function addMotivation() {
-        $.post(
-            {
-                url: '../add_motive/',
-                data : {
-                    'motivation': $('#motive').val()
-                },
-            }
-        )
-    }
-    $(`#submit-button`).attr('onclick', `addMotivation()`);
-
-    const changeButton = document.getElementById('change-button');
-
-    function getMotivation() {
-        $.get(
-            '../get_motive/',
-            (res) => {
-                console.log(res)
-                $('#motive-container').empty();
-                $('#motive-container').append(
-                    `
-                    <h3>${res[0].fields.sentences}</h3>
-                    <h5>${res[0].fields.user}</h5>
-                        `
-                )
-            }
-        )
-    }
-    $(`#change-button`).attr('onclick', `getMotivation()`);
-
-
-</script>
+<script src="{% static 'js/calburned_script.js' %}" type="text/javascript"></script>
 
 {% endblock %}

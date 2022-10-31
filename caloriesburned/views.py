@@ -42,7 +42,7 @@ def show_result(request):
     context={
         'berat': tempat[0].weight,
         'nama': request.user,
-        'list_mileage': data_mileage,
+        'list_mileage': data_mileage.reverse(),
     }
     return render(request, 'showcalories.html', context)
 
@@ -64,7 +64,7 @@ def get_motive(request):
     if request.method == 'GET':
         data = Motive.objects.all()
 
-        return HttpResponse( serializers.serialize('json', data),
+        return HttpResponse(serializers.serialize('json', data),
             content_type='application/json'
         )
 
@@ -82,13 +82,14 @@ def calories_chart(request):
     count = 0
 
     for items in queryset:
-        if count < 7:
-            date.append(items.datetime)
-            if items.onFoot:
-                calories.append(items.mileage*4057.55263)
-            else:
-                calories.append(items.mileage*0)
-            count += 1
+        if items.onFoot:
+            if count < 7:
+                date.append(items.datetime)
+                if items.onFoot:
+                    calories.append(items.mileage*4057.55263)
+                else:
+                    calories.append(items.mileage*0)
+                count += 1
         
     return JsonResponse(data={
         'date': date,
