@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 def register(request):
@@ -21,7 +21,7 @@ def register(request):
             return redirect('user:login_user')
     
     context = {'form':form}
-    return render(request, 'register.html', context)
+    return render(request, 'user_register.html', context)
 
 def login_user(request):
     if request.method == 'POST':
@@ -36,7 +36,7 @@ def login_user(request):
         else:
             messages.info(request, 'Username atau Password salah!')
     context = {}
-    return render(request, 'login.html', context)
+    return render(request, 'user_login.html', context)
 
 # 
 def logout_user(request):
