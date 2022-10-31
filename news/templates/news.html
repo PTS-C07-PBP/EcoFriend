@@ -11,7 +11,7 @@
     {% if user.is_authenticated %}
     <div id="add-article">
         <h1 class="mt-4 mb-5">Try writing about <br>enviromental issues in your country</h1>
-        <p>Hello {{ current_user }}! You have created <span id="num_created_articles">{{ num_created_articles }}</span> articles</p>
+        <p>Hello {{ current_user }}! You have created <span id="num_created_articles">{{ num_created_articles }}</span><span id="article_articles">{% if num_created_articles <= 1 %} article. {% else %} articles. {% endif %}</span></p>
         <form>
             <table>
                 {% csrf_token %}
@@ -27,6 +27,7 @@
 
     <div style="text-align: center;">
         <h1 class="mt-5 mb-4">News about Enviromental Issues</h1>
+        <p id="sub-text">Across the world, enviromental issues become a growing problems, such as lack of water, loss of biodiversity, and climate change. So we in EcoFriend curated news from UN News and our admin reports to raise awareness of environmental issues in every part of the world.</p>
         <p>Powered by: </p>
         <div class="d-flex justify-content-center">
             <a href="https://news.un.org/en/news/topic/climate-change"><img width="100px" src="https://news.un.org/themes/custom/un_base_theme/images/logos/logo-en.svg"></a>
@@ -51,7 +52,7 @@
     </div>
 </div>
 
-<span id="current_user" style="color: white;">{{ current_user.id }}</span>
+{{ current_user.id|json_script:"current_user" }}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="{% static 'js/news_script.js' %}" type="text/javascript"></script>
 {% endblock content %}
