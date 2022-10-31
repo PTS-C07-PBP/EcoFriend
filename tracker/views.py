@@ -31,10 +31,9 @@ def add_footprint(request):
             date = datetime.strptime(date_str, "%H:%M %b %d, %Y")
             
             mileage = request.POST.get('mileage')
-            type = request.POST.get('btnradio')
+            type = request.POST.get('type')
             
             carbon = mileage
-            to_order = str(int(carbon) / int(mileage))
             on = False
             
             if type == "mobil":
@@ -42,6 +41,8 @@ def add_footprint(request):
             if type == "jalan":
                 carbon = 0
                 on = True
+                
+            to_order = str(int(carbon) / int(mileage))
             
             # membuat objek baru berdasarkan model dan menyimpannya ke database
             new_footprint = Footprint(user=user, datetime=date, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
@@ -50,7 +51,7 @@ def add_footprint(request):
             return render(request, 'tracker.html')
         else:
             tracker_form = TrackerForm()
-            messages.info(request, 'PLease fill out all fields to proceed')
+            messages.info(request, 'PLease fill out fields to proceed')
     return render(request, 'tracker.html')
 
 # fungsi mendaftarkan pengguna
@@ -79,10 +80,8 @@ def login_user(request):
             login(request, user)
             
             # membuat respons
-            response = HttpResponseRedirect(reverse("tracker:show_history"))
+            response = HttpResponseRedirect(reverse("news:news"))
             
-            # membuat cookie last_login dan menambahkannya ke dalam response
-            # response.set_cookie("last_login", str(datetime.datetime.now())) 
             return response
         else:
             messages.info(request, 'Wrong Username or Password!')
