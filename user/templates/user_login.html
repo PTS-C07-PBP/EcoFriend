@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+{% block meta %}
+<title>Login</title>
+{% endblock meta %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user_style.css' %}">
+<div class = "login" align="center">
+    <h1>Login</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+    
+        <div class="form-row align-items-center">
+            <div class="col-sm-2">
+                <label class="col-form-label" align="center">Username: </label>
+    
+                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+            </div>
+            
+            <div class="col-sm-2" style="margin-bottom:15px" >
+                <label class="col-form-label" align="center">Password: </label>
+            
+                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+            </div>
+
+            <td></td>
+            <td><input class="btn btn-outline-primary" style="margin-bottom:8px" type="submit" value="Login"></td>
+            
+        </div>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}     
+
+    Don't have an account yet? <a href="{% url 'user:register' %}">Register</a>
+
+</div>
+
+{% endblock content %}
