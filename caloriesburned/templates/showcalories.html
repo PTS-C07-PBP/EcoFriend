@@ -54,13 +54,9 @@
 </div>
 
 <div class="flex-zero" style="width: 100%">
-    <form 
-            id="create-motive-form"
-            onsubmit="return false;"
-    >
+    <form id="add-motive-form" onsubmit="return false;" method="post">
         {% csrf_token %}
-        <label for="motive" >Enter Motive: </label>
-        <input type="text" id="motive" name="motive" size="50"/>
+        {{form}}
         <button type="submit" id="submit-button" name="submit-button" onclick="" >Submit</button>
     </form>
 </div>

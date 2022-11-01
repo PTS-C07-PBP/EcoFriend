@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.contrib import messages
 from tracker.models import Footprint
 from caloriesburned.models import Person, Motive
-from .forms import userWeight
+from .forms import userWeight, addMotive
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
@@ -39,25 +39,29 @@ def show_caloriesburned(request):
 def show_result(request):
     tempat = Person.objects.filter(user=request.user)
     data_mileage = Footprint.objects.filter(user=request.user)
+    form = addMotive()
     context={
         'berat': tempat[0].weight,
         'nama': request.user,
         'list_mileage': data_mileage.reverse(),
+        'form': form,
     }
     return render(request, 'showcalories.html', context)
 
 @csrf_exempt
-def add_motive(request):
+def add_motive(request):    
     if request.method == 'POST':
-        sentences = request.POST.get("motivation")
-
-        motive = Motive.objects.create(user=request.user, sentences=sentences)
-
-        return JsonResponse(
-            {
-                "sentences": motive.sentences,
-            }
-        )
+        form = addMotive(request.POST)
+        if form.is_valid():
+            sentences = request.POST.get('motive')
+            print(sentences)
+            motive = Motive.objects.create(user=request.user, sentences=sentences)
+            response = serializers.serialize('json', [motive])
+            return JsonResponse(
+                
+                    response, safe=False,
+                
+            )
 
 @csrf_exempt
 def get_motive(request):

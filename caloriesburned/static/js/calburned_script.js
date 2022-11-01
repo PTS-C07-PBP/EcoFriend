@@ -36,20 +36,17 @@ $(function(){
 const submitButton = document.getElementById('submit-button');
 
 function addMotivation() {
+    let form = $('#add-motive-form')
     $.post(
         {
             url: '../add_motive/',
-            data : {
-                'motivation': $('#motive').val()
-            },
-            success: confirmation()   
+            data : form.serialize(),
+            success: (response) => {
+                confirm("Motivation saved!");
+                $('input[name=motive]').val("");
+            }  
         }
     )
-}
-
-function confirmation() {
-    $('#motive').val("");
-    confirm("Motivation saved!");
 }
 
 $(`#submit-button`).attr('onclick', `addMotivation()`);
