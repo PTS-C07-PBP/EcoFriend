@@ -14,18 +14,18 @@
 <div class="flex-zero">
     <div class="tracker">
         <h1>
-            Welcome to your burned caloried tracker {{nama}}
+            Welcome to your burned caloried tracker, {{nama}}
         </h1>
 
     </div>
 </div>
 
-<div class ="flex-zero">
+<div class ="flex-two">
     <div class="container">
         <div id="motive-container">
         </div>
-        <div class ="flex-zero">
-            <button type="change" id="change-button" name="change-button" onclick="" >change</button>
+        <div class ="flex-two">
+            <button type="change" class="btn btn-primary" id="change-button" name="change-button" onclick="" >Reveal Motivations</button>
         </div>
     </div>
 </div>
@@ -46,14 +46,14 @@
             <tr>
                 {% if item.onFoot %}
                     <td>{{item.datetime}}</td>
-                    <td>{{item.mileage|mul:4057.55263|floatformat:"0"}}</td>
+                    <td>{{item.mileage|mul:4057.55263|floatformat:"0"}} cal</td>
                 {% endif %}
             </tr>
         {% endfor %}
     </table>
 </div>
 
-<div class="flex-zero" style="width: 100%">
+<div class="flex-two" style="width: 100%">
     <form id="add-motive-form" onsubmit="return false;" method="post">
         {% csrf_token %}
         {{form}}
