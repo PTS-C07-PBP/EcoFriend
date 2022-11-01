@@ -7,6 +7,7 @@
     <script src="{% static 'js/review_script.js' %}" type="text/javascript"></script>
     
     <div class = "add review" style="margin-top:3%" max-width:"100%" width="50%">
+    </div>
       
       <div class="card-deck" id="deck" max-width:"100%" width="50%">
       </div>
@@ -16,12 +17,14 @@
                 <h1 class="navbar-brand" href="#">Our App Review!</h1>
             </div>
         </div>
-      
+        
+        {% if user.is_authenticated %}
         <div class="content w-100 mx-auto">
             <div class="header text-center mx-auto">
                 <button type="button" class="btn btn-outline-success" style="margin:1%;" data-bs-toggle="modal" data-bs-target="#addReview"><a style="text-decoration:none">Add</a></button>
             </div>
         </div>
+        {% endif %}
       
       <div class="row row-cols-1 row-cols-md-3 g-4 md:justify-end gap-4" id="main-div"></div>
       
@@ -67,6 +70,7 @@
                 </div>
             </div>
         </div>
+        
       </div>
 
     {% endblock content %}

@@ -8,9 +8,10 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/news_style.css' %}">
 <div class="news" align="center">
+    {% if user.is_authenticated %}
     <div id="add-article">
-        {% if user.is_authenticated %}
         <h1 class="mt-4 mb-5">Try writing about <br>enviromental issues in your country</h1>
+        <p>Hello {{ current_user }}! You have created <span id="num_created_articles">{{ num_created_articles }}</span><span id="article_articles">{% if num_created_articles <= 1 %} article. {% else %} articles. {% endif %}</span></p>
         <form>
             <table>
                 {% csrf_token %}
@@ -21,11 +22,12 @@
         </form>
 
         <a class="btn mt-3 mb-4" href="{% url 'news:reset' %}">Reset</a>
-        {% endif %}
     </div>
+    {% endif %}
 
     <div style="text-align: center;">
         <h1 class="mt-5 mb-4">News about Enviromental Issues</h1>
+        <p id="sub-text">Across the world, enviromental issues become a growing problems, such as lack of water, loss of biodiversity, and climate change. So we in EcoFriend curated news from UN News and our admin reports to raise awareness of environmental issues in every part of the world.</p>
         <p>Powered by: </p>
         <div class="d-flex justify-content-center">
             <a href="https://news.un.org/en/news/topic/climate-change"><img width="100px" src="https://news.un.org/themes/custom/un_base_theme/images/logos/logo-en.svg"></a>
@@ -50,78 +52,7 @@
     </div>
 </div>
 
+{{ current_user.id|json_script:"current_user" }}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-// Menggabungkan data article dengan sintaks HTML
-function makeArticle(article) {
-    if (article.fields.admin_created) {
-        var html = "<div id='"+article.pk+"' class='col'><div class='card border border-success'><div class='card-body'><h5 class='card-title'><a href="+article.fields.link+">"+article.fields.title+"</a></h5>"
-            html += "<p class='card-text'><small class='text-muted'>"+article.fields.date+"</small></p><p class='card-text'><small class='text-muted'>"+article.fields.region+"</small></p><p class='card-text'>"+article.fields.description+"</p><button class='btn' onclick='deleteArticle("+article.pk+");'>Delete</button></td></tr></div></div></div>"
-    } else {
-        var html = "<div id='"+article.pk+"' class='col'><div class='card border border-success'><img src="+article.fields.image+"class='card-img-top' width='200px'><div class='card-body'><h5 class='card-title'><a href="+article.fields.link+">"+article.fields.title+"</a></h5>"
-        html += "<p class='card-text'><small class='text-muted'>"+article.fields.date+"</small></p><p class='card-text'><small class='text-muted'>"+article.fields.region+"</small></p><p class='card-text'>"+article.fields.description+"</p></div></div></div>"
-    }
-    return html;
-}
-
-// Menambah 10 article dan pagination
-function add_articles(page_num) {
-    $.get("/news/articles/", {'region':$('#id_filter_region').val(), 'page_num':page_num}, function(data) {
-        $('#articles').html('');
-        $.each(data[0], function(index, article) {
-            $('#articles').append(makeArticle(article));
-        });
-        $('#pagination').html('');
-        for (var page_num = 1; page_num <= data[1]; page_num++) {
-            $('#pagination').append("<button type='button' class='btn' onclick='paginate("+page_num+");'>"+page_num+"</button>");
-        }
-    });
-}
-    
-// Get article saat load
-$(document).ready(function(){
-    $.get("/news/init/", function(data) {
-        $.each(data[0], function(index, article) {
-            $('#articles').append(makeArticle(article));
-        });
-        $('#pagination').html('');
-        for (var page_num = 1; page_num <= data[1]; page_num++) {
-            $('#pagination').append("<button type='button' class='btn' onclick='paginate("+page_num+");'>"+page_num+"</button>");
-        }
-    });
-});
-
-// Filter article sesuai region
-$('#id_filter_region').change(function() {
-    add_articles(1);
-});
-
-// Fungsi saat menekan pagination
-function paginate(page_num) {
-    add_articles(page_num);
-}
-
-// Menambah article baru khusus admin
-$(".btn-add-article").click(function(e) {
-    e.preventDefault();
-    $.post("/news/add/", {title: $('#id_title').val(), region: $('#id_region').val(), description: $('#id_description').val(), csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}, function(data) {
-        add_articles(1);
-    });
-});
-
-// Menghapus article yang dibuat admin
-function deleteArticle(pk) {
-    $.ajax({
-        url: "/news/delete/"+pk,
-        method: "DELETE",
-        dataType: "json",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-        },
-        success: function(data) {
-            add_articles(1);
-        }
-    });
-}
-</script>
+<script src="{% static 'js/news_script.js' %}" type="text/javascript"></script>
 {% endblock content %}
