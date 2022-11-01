@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'example_app',
     'ecofriend',
+    'review',
     'news',
     'tracker',
+    'leaderboard',
 ]
 
 MIDDLEWARE = [
@@ -121,8 +123,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-DATE_INPUT_FORMATS = ['%H:%M %b %d, %Y']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

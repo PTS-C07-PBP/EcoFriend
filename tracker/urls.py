@@ -4,10 +4,6 @@ from tracker.views import add_footprint, show_history, tracker, login_user, logo
 
 app_name = 'tracker'
 
-# urlpatterns = [
-#     path('', tracker_submit, name='tracker_submit'),
-# ]
-
 urlpatterns = [
     path('', tracker, name='index'),
     path('get_data', show_history, name='show_history'),
