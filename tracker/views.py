@@ -6,10 +6,10 @@ from django.core import serializers
 from django.core import serializers
 from django.shortcuts import HttpResponse, render
 
-@login_required(login_url='user/login/')
 def tracker(request):
     return render(request, "tracker.html")
 
+@login_required(login_url='/user/login/')
 def show_history(request):
     history = Footprint.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', history))
