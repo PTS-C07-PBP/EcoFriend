@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Account Registration</title>
+{% endblock meta %}    
+
+{% block content %}  
+<link rel="stylesheet" href="{% static 'css/user_style.css' %}">
+<div class = "register" align="center">
+    <h1>Registration Form</h1>  
+        <br>
+        <form method="POST" >  
+            {% csrf_token %}  
+            <table>  
+                {{ form.as_table }}  
+                <tr>  
+                    <th>
+						<label>Role User:</label>
+					</th>
+					<td>
+						<input type="radio" name="role_user" value="admin" required />
+						<label>Admin</label>
+						<input type="radio" name="role_user" value="ecouser" />
+						<label>EcoUser</label>
+					</td>
+                </tr>  
+                <tr>
+                </tr>
+            </table>  
+            <input class="btn btn-outline-primary btn-lg btn-block" style="margin-top:8px" type="submit" value="Register"> 
+        </form>
+
+    {% if messages %}  
+        <ul>   
+            {% for message in messages %}  
+                <li>{{ message }}</li>  
+                {% endfor %}  
+        </ul>   
+    {% endif %}
+
+</div>  
+
+<script>
+	$(document).ready(function () {
+		$(".submit-button").click(function () {
+			console.log($(".role_user").val());
+		});
+	});
+</script>
+
+{% endblock content %}
