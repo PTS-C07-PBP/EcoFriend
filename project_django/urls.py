@@ -21,5 +21,4 @@ urlpatterns = [
     path('review/', include('review.urls')),
     path('', include('news.urls')),
     path('tracker/', include('tracker.urls')),
-    path('ranking/', include('leaderboard.urls'))
 ]

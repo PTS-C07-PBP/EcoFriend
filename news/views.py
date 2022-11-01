@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.core import serializers
+from django.urls import reverse
 
 # Web Scrapping
 import requests
@@ -19,19 +20,26 @@ from django.contrib.auth.decorators import login_required
 def news(request):
     filter_form = FilterForm()
     article_form = ArticleForm()
-    # Jumlah article yang dibuat admin
+
+    # Set session jika belum ada
+    latest_region = request.session.setdefault('latest_region', 'all')
+    request.session.setdefault('page_num', '1')
+
+    # Jumlah article yg dibuat
     try:
-        request.session['num_created_articles'] = len(Article.objects.filter(user=request.user))
-        num_created_articles = request.session['num_created_articles']
+        num_created_articles = len(Article.objects.filter(user=request.user))
     except:
         num_created_articles = 0
-
+    
     context = {
         'current_user': request.user,
         'filter_form': filter_form, 
         'article_form': article_form,
-        'num_created_articles': num_created_articles
+        'num_created_articles': num_created_articles,
+        'latest_region': " ".join(word.capitalize() for word in latest_region.split(" "))
         }
+
+    context['filter_form'] = FilterForm(initial={'filter_region': latest_region})
     return render(request, 'news.html', context)
 
 # Scrapping website UN News
@@ -88,12 +96,24 @@ def init_articles(request):
         try:
             scrapping_web_un()
         finally:
+            # Menampilkan halaman region sebelumnya
+            region = request.session['latest_region']
+            page_num = int(request.session['page_num'])
+
             # Membuat paginator
-            articles = Article.objects.order_by("-date")
+            if region == 'all': 
+                articles = Article.objects.all().order_by("-date")
+            else:
+                articles = Article.objects.filter(region__icontains=region).order_by("-date")
             paginator = Paginator(articles, 10)
             page_end = paginator.num_pages
+            start = (page_num-1)*10
+            end = page_num*10
 
-            articles = Article.objects.order_by("-date")[0:10]
+            if region == 'all': 
+                articles = Article.objects.all().order_by("-date")[start:end]
+            else:
+                articles = Article.objects.filter(region__icontains=region).order_by("-date")[start:end]
             return HttpResponse("["+serializers.serialize("json", articles)+", "+str(page_end)+"]", content_type="application/json")
     return HttpResponse('')
 
@@ -101,6 +121,7 @@ def init_articles(request):
 def show_articles(request):
     if request.method == "GET":
         region = request.GET.get('region')
+        request.session['latest_region'] = region
 
         # Membuat paginator
         # Inspiration: https://stackoverflow.com/questions/62305524/how-to-do-ajax-pagination-in-django
@@ -111,6 +132,7 @@ def show_articles(request):
         paginator = Paginator(articles, 10)
         page_end = paginator.num_pages
         page_num = int(request.GET.get('page_num', 1))
+        request.session['page_num'] = page_num
         start = (page_num-1)*10
         end = page_num*10
 
@@ -137,12 +159,7 @@ def add_article(request):
         instance.description = request.POST.get('description')
         instance.save()
 
-        # Menambah counter article yang dibuat
-        try:
-            request.session['num_created_articles'] = request.session['num_created_articles'] + 1
-            return JsonResponse(request.session['num_created_articles'], safe=False)
-        except:
-            return JsonResponse(0, safe=False)
+        return JsonResponse(len(Article.objects.filter(user=request.user)), safe=False)
     return HttpResponse('')
 
 # Delete article dengan id
@@ -152,22 +169,14 @@ def delete_article(request, id):
         article = Article.objects.get(pk=id)
         article.delete()
 
-        # Mengurangi counter article yang dibuat
-        try:
-            request.session['num_created_articles'] = request.session['num_created_articles'] - 1
-            return JsonResponse(request.session['num_created_articles'], safe=False)
-        except:
-            return JsonResponse(0, safe=False)
+        return JsonResponse(len(Article.objects.filter(user=request.user)), safe=False)
     return HttpResponse('')
 
 # Reset article
 @login_required(login_url='/tracker/login/')
 def reset(request):
     Article.objects.all().delete()
-    try:
-        request.session['num_created_articles'] = 0
-    finally:
-        return redirect("news:news")
+    return redirect("news:news")
     
 def json(request):
     if request.method == 'GET':

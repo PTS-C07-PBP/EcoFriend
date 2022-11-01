@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'review',
     'news',
     'tracker',
-    'leaderboard',
 ]
 
 MIDDLEWARE = [
