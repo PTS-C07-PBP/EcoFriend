@@ -21,7 +21,6 @@ def add_footprint(request):
             user = request.user
             nowvar = datetime.now()
             date_str = nowvar.strftime("%H:%M %b %d, %Y")
-            date = datetime.strptime(date_str, "%H:%M %b %d, %Y")
             
             mileage = request.POST.get('mileage')
             type = request.POST.get('type')
@@ -39,7 +38,7 @@ def add_footprint(request):
             to_order = str(float(carbon) / float(mileage))
             
             # membuat objek baru berdasarkan model dan menyimpannya ke database
-            new_footprint = Footprint(user=user, datetime=date, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
+            new_footprint = Footprint(user=user, datetime=nowvar, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
             new_footprint.save()
             
             return render(request, 'tracker.html')
