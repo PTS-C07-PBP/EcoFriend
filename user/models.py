@@ -1,10 +1,3 @@
-from email.policy import default
-from tokenize import group
-from django.db import models
-from django.contrib.auth.models import User, Group
-from tracker.models import Footprint
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 
 # class EcoUser(models.Model):
 #     # user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
