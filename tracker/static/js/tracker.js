@@ -1,7 +1,8 @@
 function refreshHistory() {
   $.getJSON("/tracker/get_data", function (data) {
+    var history = '';
+
     $.each(data, function (key, value) {
-      var history = '';
 
       history += '<div class="card" id="card">'
       history += '<div class="card-header" id="header">'
@@ -12,8 +13,8 @@ function refreshHistory() {
       history += '</div>'
       history += '</div>'
 
-      $("#deck").append(history);
     });
+    document.getElementById("deck").innerHTML = history;
   });
 }
 
