@@ -34,7 +34,7 @@ Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi 
     Dikerjakan oleh: Farel
 
 4. Calories burned (Person health condition) 
-    Penjelasan singkat: Menampilkan jumlah kalori terbakar yang penyajian data nantinya akan disertai dengan data rata-rata kalori yang dikeluarkan orang setiap harinya. Fitur ini bertujuan untuk memberikan motivasi bagi para user yang sudah ikut berpartisipasi mengurangi jejak karbon dengan berjalan kaki atau mengendarai sepeda.   
+    Penjelasan singkat: Menampilkan jumlah kalori terbakar berdasarkan jarak yang diinput pada fitur tracker jika user berjalan kaki. Fitur ini juga menampilkan dan menginput motivasi yang dapat berasal dari user lainnya. Fitur ini bertujuan untuk memberikan motivasi bagi para user yang sudah ikut berpartisipasi mengurangi jejak karbon dengan berjalan kaki.   
     Dikerjakan oleh: Valencius
 
 5. User 
