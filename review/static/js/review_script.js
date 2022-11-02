@@ -61,9 +61,9 @@ function add_review() {
                 <div class="card-body">
                     <h4 class="card-title text-center fw-semibold">${review.title}</h4>
                     <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-secondary">${review.user__username}</li>
-                    <li class="list-group-item text-secondary">${review.date}</li>
-                    <li class="list-group-item text-secondary">${review.rating}</li>
+                    <li class="list-group-item text-secondary">Username: ${review.user__username}</li>
+                    <li class="list-group-item text-secondary">Date: ${review.date}</li>
+                    <li class="list-group-item text-secondary">Rating: ${review.rating} of 5</li>
                     <li class="list-group-item">${review.description}</li>
                     </ul>
                 </div>
