@@ -26,3 +26,12 @@ footer {
     font-family: 'Lobster', cursive;
     font-size: 30px;
 }
+
+.flex-wrapper {
+    display: flex;
+    min-height: 15vh;
+    flex-direction: column;
+    justify-content: space-between;
+    position: sticky;
+    top: 100%;
+  }

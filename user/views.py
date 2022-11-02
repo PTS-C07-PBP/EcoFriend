@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -17,12 +18,25 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+
+            user = form.save()
+            print(form.cleaned_data['user_role'])
+            # user_role = request.POST.get('user_role')
+            try:
+                group = Group.objects.create(name=form.cleaned_data['user_role'])
+            except:
+                group = Group.objects.get(name=form.cleaned_data['user_role'])
+            # group = Group.objects.get(name=form.cleaned_data['user_role'])
+            # user = User.objects.get(username=request.POST.get('user_role'))
+            user.groups.add(group)
             messages.success(request, 'Akun telah berhasil dibuat!')
+            # Group.objects.get(user=user)
             return redirect('user:login_user')
     
     context = {'form':form}
     return render(request, 'user_register.html', context)
 
+# 
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')

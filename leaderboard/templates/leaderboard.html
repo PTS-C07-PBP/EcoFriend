@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta %}
+    <title>Ranking | How Green Are You? </title>
+    <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+
+
+<body>
+    <div>
+        <div class="container-ml,  flex-container center">
+
+            <div class ="d-flex justify-content-center">
+                <div class = "default">
+                    <h1>How Green Are You?</h1>
+                </div>
+
+            </div>
+            
+            <div class="l-box">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Mileage</th>
+                            <th>Footprint</th>
+                            <th>Like</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            
+                            <td>{{ item.0 }}</td>
+                            <td>{{ item.2 }}</td>
+                            <td>{{ item.3 }}</td>
+                            <td>
+                                <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
+                            </td>                        
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+        <div class ="d-flex justify-content-center">
+            <form id="comment-form" action="{% url 'leaderboard:add_comment' %}" method="POST">
+                {% csrf_token %}
+                <div>
+                    {{ form }}
+                </div>
+                <br>
+                <div class ="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class = "d-flex justify-content-center">
+            <h2>Comments</h2>
+        </div>
+       
+        <div id="comment-section" class = "d-flex flex-wrap justify-content-center align-items-center w-100">
+            {% for comment in comments %}
+                <div class="card" style="min-width: 300px; margin: 10px">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{ comment.user }} </h5>
+                        <p class="card-text"> {{ comment.comment }}</p>
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+
+</body>
+<script>
+    function myFunction(x) {
+        x.classList.toggle("fa-thumbs-down");
+        $('#comment-section').append(
+            `<div>TEST</div>`
+        )
+      }
+
+
+      $(document).ready(() => {
+        $.get('{% url "leaderboard:show_comment" %}', data => {
+            data.forEach(comment => {
+                $('#comment-section').append(
+                    `
+                    <div class="card" style="min-width: 300px; margin: 10px">
+                        <div class="card-body">
+                            <h5 class="card-title"> ${ comment.user } </h5>
+                            <p class="card-text"> ${ comment.comment } </p>
+                        </div>
+                    </div>
+                    `
+                )
+            })
+        })
+
+        $('#comment-form').submit(function(e){
+            e.preventDefault()
+
+            let form = $(this)
+            let action = form.attr('action')
+
+            $.ajax({
+                type: 'POST',
+                url: action,
+                data: form.serialize(),
+                success: comment => {
+                    $('#comment-section').append(
+                        `
+                        <div class="card" style="min-width: 300px; margin: 10px">
+                            <div class="card-body">
+                                <h5 class="card-title"> ${ comment.user } </h5>
+                                <p class="card-text"> ${ comment.comment } </p>
+                            </div>
+                        </div>
+                        `
+                    )
+                    form.trigger('reset')
+                }
+            })
+        })
+      })
+      
+
+    </script>
+{% endblock %}

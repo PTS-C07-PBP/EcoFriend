@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('news.urls')),
     path('tracker/', include('tracker.urls')),
     path('caloriesburned/', include('caloriesburned.urls')),
+    path('ranking/', include ('leaderboard.urls')),
     path('user/', include('user.urls')),
 ]

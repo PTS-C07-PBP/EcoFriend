@@ -44,7 +44,24 @@ function addMotivation() {
             success: (response) => {
                 confirm("Motivation saved!");
                 $('input[name=motive]').val("");
+                getLastSubmit();
             }  
+        }
+    )
+}
+
+function getLastSubmit() {
+    $.get(
+        '../get_last_submit/',
+        (res) => {
+            $('#last-login-container').empty();
+            $('#last-login-container').append(
+                `
+                <div class="flex-two">
+                    <h6>Last submit motivation: ${res.last_submit}</h6>   
+                </div>
+                `
+            )
         }
     )
 }
@@ -57,7 +74,6 @@ function getMotivation() {
     $.get(
         '../get_motive/',
         (res) => {
-            console.log(res)
             let long = res.length;
             const indeks = Math.floor(Math.random() * long);
             $('#motive-container').empty();

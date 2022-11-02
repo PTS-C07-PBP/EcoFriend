@@ -17,28 +17,29 @@ def show_history(request):
 def add_footprint(request):
     if request.method == 'POST':
         tracker_form = TrackerForm(request.POST)
+        
         if tracker_form.is_valid():
             user = request.user
             nowvar = datetime.now()
             date_str = nowvar.strftime("%H:%M %b %d, %Y")
-            date = datetime.strptime(date_str, "%H:%M %b %d, %Y")
             
             mileage = request.POST.get('mileage')
             type = request.POST.get('type')
             
-            carbon = mileage
+            carbon = 0
             on = False
             
             if type == "mobil":
-                carbon = str(int(mileage) * 17)
+                carbon = str(float(mileage) * 120)
+            if type == "motor":
+                carbon = str(float(mileage) * 113)
             if type == "jalan":
-                carbon = 0
                 on = True
                 
-            to_order = str(int(carbon) / int(mileage))
+            to_order = str(float(carbon) / float(mileage))
             
             # membuat objek baru berdasarkan model dan menyimpannya ke database
-            new_footprint = Footprint(user=user, datetime=date, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
+            new_footprint = Footprint(user=user, datetime=nowvar, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
             new_footprint.save()
             
             return render(request, 'tracker.html')

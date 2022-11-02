@@ -1,19 +1,20 @@
 function refreshHistory() {
   $.getJSON("/tracker/get_data", function (data) {
+    var history = '';
+
     $.each(data, function (key, value) {
-      var history = '';
 
       history += '<div class="card" id="card">'
       history += '<div class="card-header" id="header">'
       history += value.fields.datetime_show + '</div>'
       history += '<div class="card-body" id="body">'
       history += '<p class="card-text" id="text">'
-      history += 'You traveled for ' + value.fields.mileage + ' km and create as much as ' + value.fields.carbon + ' kg of carbon footprint</p>'
+      history += 'You traveled for ' + value.fields.mileage + ' km and create as much as ' + value.fields.carbon + ' g of carbon footprint</p>'
       history += '</div>'
       history += '</div>'
 
-      $("#deck").append(history);
     });
+    document.getElementById("deck").innerHTML = history;
   });
 }
 
