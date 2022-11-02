@@ -30,12 +30,12 @@ def add_footprint(request):
             on = False
             
             if type == "mobil":
-                carbon = str(int(mileage) * 17)
+                carbon = str(float(mileage) * 17)
             if type == "jalan":
                 carbon = 0
                 on = True
                 
-            to_order = str(int(carbon) / int(mileage))
+            to_order = str(float(carbon) / float(mileage))
             
             # membuat objek baru berdasarkan model dan menyimpannya ke database
             new_footprint = Footprint(user=user, datetime=date, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
