@@ -15,8 +15,7 @@ from tracker.models import Footprint
 from caloriesburned.models import Person, Motive
 from .forms import userWeight, addMotive
 from django.core import serializers
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 def show_caloriesburned(request):
     if request.user.is_authenticated:
@@ -40,13 +39,13 @@ def show_caloriesburned(request):
 
 def show_result(request):
     tempat = Person.objects.filter(user=request.user)
-    data_mileage = Footprint.objects.filter(user=request.user)
+    data_mileage = Footprint.objects.filter(user=request.user).order_by('-datetime')
     form = addMotive()
     context={
         'last_submit': request.session.get('last_submit', '-'),
         'berat': tempat[0].weight,
         'nama': request.user,
-        'list_mileage': data_mileage.reverse(),
+        'list_mileage': data_mileage,
         'form': form,
     }
     return render(request, 'showcalories.html', context)
@@ -57,9 +56,9 @@ def add_motive(request):
         form = addMotive(request.POST)
         if form.is_valid():
             sentences = request.POST.get('motive')
-            print(sentences)
             motive = Motive.objects.create(user=request.user, sentences=sentences)
             response = serializers.serialize('json', [motive])
+            request.session['last_submit'] = str(datetime.datetime.now())
             return JsonResponse(
                 
                     response, safe=False,
@@ -70,7 +69,6 @@ def add_motive(request):
 def get_motive(request):
     if request.method == 'GET':
         data = Motive.objects.all()
-
         return HttpResponse(serializers.serialize('json', data),
             content_type='application/json'
         )
@@ -107,24 +105,3 @@ def calories_chart(request):
         'date': date,
         'calories': calories,
     })
-
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            
-            response = HttpResponseRedirect(reverse("caloriesburned:show_caloriesburned"))
-            return response
-        else:
-            messages.info(request, "Wrong username or password!")
-    context = {}
-    return render(request, 'login.html', context)
-
-def logout_user(request):
-    logout(request)
-    response = HttpResponseRedirect(reverse("caloriesburned:login_user"))
-    response.delete_cookie('last_login')
-    return response
