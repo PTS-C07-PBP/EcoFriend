@@ -17,6 +17,7 @@ def show_history(request):
 def add_footprint(request):
     if request.method == 'POST':
         tracker_form = TrackerForm(request.POST)
+        
         if tracker_form.is_valid():
             user = request.user
             nowvar = datetime.now()
