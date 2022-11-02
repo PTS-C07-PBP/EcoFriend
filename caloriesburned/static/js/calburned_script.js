@@ -63,7 +63,7 @@ function getMotivation() {
             $('#motive-container').empty();
             $('#motive-container').append(
                 `
-                <div class="flex-zero">
+                <div class="flex-two">
                     <h5>${res[indeks].fields.sentences}</h5>
                 </div>
                 `
