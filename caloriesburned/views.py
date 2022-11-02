@@ -15,8 +15,7 @@ from tracker.models import Footprint
 from caloriesburned.models import Person, Motive
 from .forms import userWeight, addMotive
 from django.core import serializers
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 def show_caloriesburned(request):
     if request.user.is_authenticated:
