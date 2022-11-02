@@ -1,0 +1,52 @@
+.tracker h1 {
+    font-family: 'Lobster', cursive;
+    margin-top: 5%;
+    max-width:100%;
+    width:50%;
+}
+
+.tracker form {
+    margin-top:3%;
+    max-width:"100%";
+    width:"50%";
+}
+
+.tracker h3 {
+    margin-top: 6%;
+    margin-bottom: 9.5%;
+    max-width:100%;
+    width:50%;
+}
+
+.tracker h4 {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    max-width:100%;
+    width:50%;
+}
+
+.tracker #mileage, .btn-group, .btn {
+    margin-top:1%;
+    margin-bottom:2%
+}
+
+.btn-group, .btn:hover {
+    color: rgb(0, 252, 151);
+}
+
+.card-deck {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    align-items:stretch;
+  }
+
+.card {
+    border-color: rgb(207, 255, 204);;
+    margin: 10px;
+    box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+}
+
+#header {
+    background: rgb(0, 252, 151);;
+}

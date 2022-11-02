@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'review',
     'news',
     'tracker',
+    'caloriesburned',
+    'mathfilters',
+    'user',
 ]
 
 MIDDLEWARE = [
