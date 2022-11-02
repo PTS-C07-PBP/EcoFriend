@@ -8,7 +8,7 @@ function refreshHistory() {
       history += value.fields.datetime_show + '</div>'
       history += '<div class="card-body" id="body">'
       history += '<p class="card-text" id="text">'
-      history += 'You traveled for ' + value.fields.mileage + ' km and create as much as ' + value.fields.carbon + ' kg of carbon footprint</p>'
+      history += 'You traveled for ' + value.fields.mileage + ' km and create as much as ' + value.fields.carbon + ' g of carbon footprint</p>'
       history += '</div>'
       history += '</div>'
 
