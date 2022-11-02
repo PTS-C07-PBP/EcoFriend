@@ -1,0 +1,14 @@
+.default h1 {
+    font-family: 'Lobster', cursive;
+}
+
+.default th, .default td, .default body {
+    justify-content: center;
+    margin : 10px;
+}
+
+.dark-mode {
+    background-color: black;
+    color: white;
+    
+  }
