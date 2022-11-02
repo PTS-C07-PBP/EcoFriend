@@ -38,6 +38,10 @@ Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi 
     Dikerjakan oleh: Valencius
 
 5. User 
+    Penjelasan singkat: Bagian yang untuk menginput data untuk mendaftar sebagai pengguna dan kemudian akan menampilkan data diri yang tadi sudah dimasukkan.  
+    Dikerjakan oleh: Kaylee
+
+6. App Review dan nambahin review kita
     Penjelasan singkat: Menampilkan review app dari para pengguna. Pada bagian ini, pengguna juga dapat  memberikan review langsung lewat app.  
     Dikerjakan oleh: Syifa
 
