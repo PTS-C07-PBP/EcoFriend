@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
-from django.urls import reverse
 
 # Web Scrapping
 import requests
@@ -13,7 +12,7 @@ from datetime import datetime
 # Paginator
 from django.core.paginator import Paginator
 
-# Restriksi fungsi untuk admin
+# Restriksi fungsi untuk admin & model admin
 from django.contrib.auth.decorators import login_required
 
 # Menampilkan template
@@ -21,9 +20,10 @@ def news(request):
     filter_form = FilterForm()
     article_form = ArticleForm()
 
+
     # Set session jika belum ada
     latest_region = request.session.setdefault('latest_region', 'all')
-    request.session.setdefault('page_num', '1')
+    page_num = request.session.setdefault('page_num', '1')
 
     # Jumlah article yg dibuat
     try:
@@ -36,7 +36,8 @@ def news(request):
         'filter_form': filter_form, 
         'article_form': article_form,
         'num_created_articles': num_created_articles,
-        'latest_region': " ".join(word.capitalize() for word in latest_region.split(" "))
+        'latest_region': " ".join(word.capitalize() for word in latest_region.split(" ")),
+        'page_num': page_num
         }
 
     context['filter_form'] = FilterForm(initial={'filter_region': latest_region})
@@ -145,7 +146,7 @@ def show_articles(request):
     return HttpResponse('')
 
 # Menambah article
-@login_required(login_url='/tracker/login/')
+@login_required(login_url='/user/login/')
 def add_article(request):
     if request.method == "POST":
         form = ArticleForm()
@@ -163,7 +164,7 @@ def add_article(request):
     return HttpResponse('')
 
 # Delete article dengan id
-@login_required(login_url='/tracker/login/')
+@login_required(login_url='/user/login/')
 def delete_article(request, id):
     if request.method == "DELETE":
         article = Article.objects.get(pk=id)
@@ -173,7 +174,7 @@ def delete_article(request, id):
     return HttpResponse('')
 
 # Reset article
-@login_required(login_url='/tracker/login/')
+@login_required(login_url='/user/login/')
 def reset(request):
     Article.objects.all().delete()
     return redirect("news:news")
