@@ -41,7 +41,6 @@ def show_caloriesburned(request):
 def show_result(request):
     tempat = Person.objects.filter(user=request.user)
     data_mileage = Footprint.objects.filter(user=request.user).order_by('-datetime')
-    print(data_mileage)
     form = addMotive()
     context={
         'last_submit': request.session.get('last_submit', '-'),
