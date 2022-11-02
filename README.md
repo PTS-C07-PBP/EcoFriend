@@ -42,16 +42,14 @@ Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi 
     Dikerjakan oleh: Syifa
 
 **Role:**
-1. Admin
-- Dapat menambahkan artikel pada halaman news
 
-2. User Login
+1. User Login
 - Dapat mengakses form carbon footprint tracker 
 - Dapat melihat data diri, status level, dan hal-hal lain berkaitan dengan akun milik user
 - Dapat mengakses fitur calories burned
 - Dapat mengisi form app review dan melihat review
 - Dapat melihat dan ikut serta dalam fitur Ranking
 
-3. User Belum Login
+2. User Belum Login
 - Dapat mengakses News about Current Environmental Issues
 - Dapat melihat review yang sudah ada di halaman review
