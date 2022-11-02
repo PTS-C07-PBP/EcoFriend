@@ -26,13 +26,14 @@ def add_footprint(request):
             mileage = request.POST.get('mileage')
             type = request.POST.get('type')
             
-            carbon = mileage
+            carbon = 0
             on = False
             
             if type == "mobil":
-                carbon = str(float(mileage) * 17)
+                carbon = str(float(mileage) * 120)
+            if type == "motor":
+                carbon = str(float(mileage) * 113)
             if type == "jalan":
-                carbon = 0
                 on = True
                 
             to_order = str(float(carbon) / float(mileage))
