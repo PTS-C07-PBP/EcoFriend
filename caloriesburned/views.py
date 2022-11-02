@@ -1,7 +1,9 @@
 from asyncio import constants
+import datetime
 import json
 import random
 from re import M
+from time import timezone
 from django.http import Http404, HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -41,6 +43,7 @@ def show_result(request):
     data_mileage = Footprint.objects.filter(user=request.user)
     form = addMotive()
     context={
+        'last_submit': request.session.get('last_submit', '-'),
         'berat': tempat[0].weight,
         'nama': request.user,
         'list_mileage': data_mileage.reverse(),
@@ -72,6 +75,11 @@ def get_motive(request):
             content_type='application/json'
         )
 
+@csrf_exempt
+def get_last_submit(request):
+    if request.method == "GET":
+        data = request.session.get('last_submit', '-')
+        return JsonResponse({'last_submit': data})
 
 def show_json(request):
     data = Motive.objects.all()
