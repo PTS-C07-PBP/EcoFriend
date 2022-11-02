@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
-from django.urls import reverse
 
 # Web Scrapping
 import requests
@@ -13,7 +12,7 @@ from datetime import datetime
 # Paginator
 from django.core.paginator import Paginator
 
-# Restriksi fungsi untuk admin
+# Restriksi fungsi untuk admin & model admin
 from django.contrib.auth.decorators import login_required
 
 # Menampilkan template
@@ -21,7 +20,6 @@ def news(request):
     filter_form = FilterForm()
     article_form = ArticleForm()
 
-    # Yang login admin
 
     # Set session jika belum ada
     latest_region = request.session.setdefault('latest_region', 'all')
