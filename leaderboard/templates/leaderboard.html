@@ -1,53 +1,66 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
-x{% load mathfilters %}
 {% load static %}
-
 
 {% block meta %}
 <head>
     <title>Ranking | How Green Are You? </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 {% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+
 <html>
 <body>
     <div>
-    <div class="container-ml,  flex-container center">
+        <div class = "card">
+            <div class="card-body">
+                <div class="container-ml,  flex-container center">
+                    <div class ="d-flex justify-content-center">
+                        <div class = "default">
+                            <h1>How Green Are You?</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="l-box">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>Mileage</th>
+                                    <th>Footprint</th>
+                                    <th>Like</th>
+                                </tr>
+                            </thead>
 
-        <div class ="d-flex justify-content-center">
-            <div class = "default">
-                <h1>How Green Are You?</h1>
+                            <tbody>
+                                {% for item in list %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.user.username }}</td>
+                                    <td>{{ item.mileage }}</td>
+                                    <td>{{ item.to_order }}</td>
+                                    <td>
+                                        <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
+                                    </td>                        
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="l-box">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Mileage</th>
-                        <th>Footprint</th>
-                    </tr>
-                </thead>
+    <script>
+    function myFunction(x) {
+        x.classList.toggle("fa-thumbs-down");
+      }
+    </script>
 
-                <tbody>
-                    {% for item in list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.user.username }}</td>
-                        <td>{{ item.mileage }}</td>
-                        <td>{{ item.to_order }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-        </div>
-    </div>
 </body>
 </html>
 {% endblock %}
