@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['ecofriend.up.railway.app']
 
-CSRF_TRUSTED_ORIGINS = ['ecofriend.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://ecofriend.up.railway.app', 'http://ecofriend.up.railway.app']
 
 # Application definition
 
