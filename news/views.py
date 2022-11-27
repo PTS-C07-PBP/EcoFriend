@@ -98,8 +98,12 @@ def init_articles(request):
             scrapping_web_un()
         finally:
             # Menampilkan halaman region sebelumnya
-            region = request.session['latest_region']
-            page_num = int(request.session['page_num'])
+            try:
+                region = request.session['latest_region']
+                page_num = int(request.session['page_num'])
+            except:
+                region = 'all'
+                page_num = 1
 
             # Membuat paginator
             if region == 'all': 
