@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'leaderboard',
     'user',
     'corsheaders',
+    'authentication',
 ]
 
 MIDDLEWARE = [

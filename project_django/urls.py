@@ -24,4 +24,5 @@ urlpatterns = [
     path('caloriesburned/', include('caloriesburned.urls')),
     path('ranking/', include ('leaderboard.urls')),
     path('user/', include('user.urls')),
+    path('authentication/', include('authentication.urls')),
 ]
