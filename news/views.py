@@ -32,7 +32,7 @@ def news(request):
         num_created_articles = 0
     
     context = {
-        'current_user': request.user,
+        'current_user': request.user.id,
         'filter_form': filter_form, 
         'article_form': article_form,
         'num_created_articles': num_created_articles,
