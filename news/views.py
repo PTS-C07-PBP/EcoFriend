@@ -170,7 +170,7 @@ def add_article(request):
 # Delete article dengan id
 @login_required(login_url='/user/login/')
 def delete_article(request, id):
-    if request.method == "DELETE":
+    if request.method == "DELETE" or request.method == "POST":
         article = Article.objects.get(pk=id)
         article.delete()
 
