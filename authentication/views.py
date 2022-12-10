@@ -17,8 +17,9 @@ def login_user(request):
             # Redirect to a success page.
             return JsonResponse({
             "status": True,
-            "message": "Successfully Logged In!"
+            "message": "Successfully Logged In!",
             # Insert any extra data if you want to pass data to Flutter
+            "current_user": request.user,
             }, status=200)
         else:
             return JsonResponse({
@@ -36,7 +37,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return JsonResponse({
-        "status": True,
+        "status": False,
         "message": "Successfully logged out"
     }, status=200)
 
