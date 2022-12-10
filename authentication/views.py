@@ -18,7 +18,7 @@ def login_user(request):
             return JsonResponse({
             "status": True,
             "message": "Successfully Logged In!",
-            "current_user": request.user,
+            "current_user": request.user.id,
             }, status=200)
         else:
             return JsonResponse({
