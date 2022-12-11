@@ -56,6 +56,15 @@ def register(request):
 
         form = RegistrationForm(request.POST)
 
+        createNewUser = UserModel.objects.create_user(
+        username = username, 
+        email = email,
+        first_name = first_name,
+        last_name = last_name,
+        password = password1,
+        )
+        createNewUser.save()
+
         if UserModel.objects.filter(username=username).exists():
             return JsonResponse({"status": "duplicate"}, status=401)
 
@@ -65,16 +74,10 @@ def register(request):
         if form.is_valid():
             form.save()
             return JsonResponse({
-                "status": True,
+                "status": "success",
                 'message': 'User successfully registered',
             }, status=200)
         return JsonResponse({
-            "status": False,
+            "status": "error",
             'message': 'Something went wrong',
         }, status=400)
-
-        # createNewUser = UserModel.objects.create_user(
-        # username = username, 
-        # password = password1,
-        # )
-        # createNewUser.save()
