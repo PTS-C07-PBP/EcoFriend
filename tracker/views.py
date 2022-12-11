@@ -42,5 +42,5 @@ def add_footprint(request):
             new_footprint.save()
             
             history = Footprint.objects.filter(user=request.user)
-            return HttpResponse(serializers.serialize('json', history), content_type='application/json')
-    return HttpResponse('')
+            res = serializers.serialize('json', [history])
+            return JsonResponse(res, safe=False)
