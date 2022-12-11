@@ -88,6 +88,16 @@ def show_json_person(request):
     data = Person.objects.all()
     return HttpResponse(serializers.serialize('json', data))
 
+def show_json_person_detail(request):
+    data = []
+    for items in Person.objects.filter(user=request.user):
+        data.append({
+            "name": str(items.user),
+            "weight": int(items.weight)
+        })
+
+    return JsonResponse(data, safe=False)
+
 
 def calories_chart(request):
     date = []
