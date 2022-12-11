@@ -12,7 +12,7 @@ def tracker(request):
 @login_required(login_url='/user/login/')
 def show_history(request):
     history = Footprint.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('json', history))
+    return HttpResponse(serializers.serialize('json', history), content_type="application/json")
 
 def add_footprint(request):
     if request.method == 'POST':
