@@ -41,5 +41,6 @@ def add_footprint(request):
             new_footprint = Footprint(user=user, datetime=nowvar, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
             new_footprint.save()
             
-            return JsonResponse(len(Footprint.objects.filter(user=request.user)), safe=False)
+            history = Footprint.objects.filter(user=request.user)
+            return HttpResponse(serializers.serialize('json', history), content_type='application/json')
     return HttpResponse('')
