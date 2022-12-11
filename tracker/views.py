@@ -1,9 +1,9 @@
 from datetime import datetime
+import json
 from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.http import JsonResponse
 from django.shortcuts import HttpResponse, render
 
 def tracker(request):
@@ -13,7 +13,7 @@ def tracker(request):
 def show_json(request):
     if request.method == 'GET':
         history = Footprint.objects.filter(user=request.user)
-        return HttpResponse(serializers.serialize('json', history), content_type='application/json')
+        return HttpResponse(json.dumps(history), content_type='application/json')
     return HttpResponse('')
 
 def add_footprint(request):
