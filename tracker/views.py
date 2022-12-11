@@ -3,7 +3,7 @@ from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.shortcuts import HttpResponse, render, JsonResponse
+from django.http import HttpResponse, render, JsonResponse
 
 def tracker(request):
     return render(request, "tracker.html")
@@ -40,7 +40,6 @@ def add_footprint(request):
             new_footprint = Footprint(user=user, datetime=nowvar, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
             new_footprint.save()
             
-            return render(request, 'tracker.html')
-        else:
-            tracker_form = TrackerForm()
-    return render(request, 'tracker.html')
+            history = Footprint.objects.filter(user=request.user)
+            res = serializers.serialize('json', [history])
+            return JsonResponse(res, safe=False)
