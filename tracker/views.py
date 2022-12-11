@@ -8,12 +8,10 @@ from django.shortcuts import HttpResponse, render
 def tracker(request):
     return render(request, "tracker.html")
 
-# @login_required(login_url='/user/login/')
+@login_required(login_url='/user/login/')
 def show_json(request):
-    if request.method == 'GET':
-        history = Footprint.objects.filter(user=request.user)
-        return HttpResponse(serializers.serialize('json', history), content_type='application/json charset=utf-8')
-    return HttpResponse('')
+    history = Footprint.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', history), content_type='application/json')
 
 def add_footprint(request):
     if request.method == 'POST':
