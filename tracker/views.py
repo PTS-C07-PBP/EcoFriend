@@ -10,7 +10,7 @@ def tracker(request):
     return render(request, "tracker.html")
 
 @login_required(login_url='/user/login/')
-def show_history(request):
+def show_json(request):
     if request.method == 'GET':
         data = Footprint.objects.filter(user=request.user)
         return HttpResponse(serializers.serialize('json', data),
