@@ -42,3 +42,6 @@ def add_footprint(request):
             new_footprint.save()
             
             return render(request, 'tracker.html')
+        else:
+            tracker_form = TrackerForm()
+    return render(request, 'tracker.html')
