@@ -59,3 +59,23 @@ def show_comment(request):
     data = Comment.objects.all()
     print(data)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
+
+def show_json(request):
+    data = Comment.objects.all()
+    return HttpResponse(serializers.serialize('json', data))
+
+def show_json_footprint(request):
+    data = Footprint.objects.all()
+    return HttpResponse(serializers.serialize('json', data))
+
+def show_json_user_detail(request):
+    data = []
+    for items in Footprint.objects.filter(user=request.user):
+        data.append({
+            "Rank" : str(items.to_order),
+            "Name": str(items.user),
+            "Mileage": int(items.mileage),
+            "Footprint": str(items.carbon),
+        })
+
+    return JsonResponse(data, safe=False)
