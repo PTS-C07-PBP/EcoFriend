@@ -3,6 +3,7 @@ from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from django.http import JsonResponse
 from django.shortcuts import HttpResponse, render
 
 def tracker(request):
@@ -11,7 +12,8 @@ def tracker(request):
 @login_required(login_url='/user/login/')
 def show_json(request):
     history = Footprint.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('json', history))
+    return JsonResponse(history)
+    # return HttpResponse(serializers.serialize('json', history))
 
 def add_footprint(request):
     if request.method == 'POST':
