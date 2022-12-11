@@ -3,14 +3,13 @@ from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.core import serializers
 from django.shortcuts import HttpResponse, render
 
 def tracker(request):
     return render(request, "tracker.html")
 
 @login_required(login_url='/user/login/')
-def show_history(request):
+def show_json(request):
     history = Footprint.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', history), content_type="application/json")
 
