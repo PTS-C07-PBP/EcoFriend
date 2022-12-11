@@ -3,7 +3,8 @@ from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.http import HttpResponse, render, JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 
 def tracker(request):
     return render(request, "tracker.html")
