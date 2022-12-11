@@ -41,6 +41,4 @@ def add_footprint(request):
             new_footprint = Footprint(user=user, datetime=nowvar, mileage = mileage, carbon = carbon, onFoot = on, datetime_show=date_str, to_order=to_order)
             new_footprint.save()
             
-            history = Footprint.objects.filter(user=request.user)
-            res = serializers.serialize('json', [history])
-            return JsonResponse(res, safe=False)
+            return render(request, 'tracker.html')
