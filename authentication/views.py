@@ -54,8 +54,6 @@ def register(request):
         password2 = data["password2"]
         user_role = data["user_role"]
 
-        form = RegistrationForm(request.POST)
-
         createNewUser = UserModel.objects.create_user(
         username = username, 
         email = email,
@@ -63,7 +61,6 @@ def register(request):
         last_name = last_name,
         password = password1,
         )
-        createNewUser.save()
 
         if UserModel.objects.filter(username=username).exists():
             return JsonResponse({"status": "duplicate"}, status=401)
@@ -71,13 +68,12 @@ def register(request):
         if password1 != password2:
             return JsonResponse({"status": "pass failed"}, status=401)
 
-        if form.is_valid():
-            form.save()
-            return JsonResponse({
-                "status": "success",
-                'message': 'User successfully registered',
-            }, status=200)
+        createNewUser.save()
         return JsonResponse({
-            "status": "error",
-            'message': 'Something went wrong',
-        }, status=400)
+            "status": "success",
+            'message': 'User successfully registered',
+        }, status=200)
+    return JsonResponse({
+        "status": "error",
+        'message': 'Something went wrong',
+    }, status=400)
