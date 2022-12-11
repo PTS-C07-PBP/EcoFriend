@@ -6,5 +6,5 @@ app_name = 'tracker'
 urlpatterns = [
     path('', tracker, name='index'),
     path('show_json', show_json, name='show_json'),
-    path('create_data', add_footprint, name='add_footprint'),
+    path('add_footprint', add_footprint, name='add_footprint'),
 ]
