@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 from tracker.forms import TrackerForm
 from tracker.models import Footprint
 from django.contrib.auth.decorators import login_required
@@ -11,10 +12,8 @@ def tracker(request):
 
 @login_required(login_url='/user/login/')
 def show_json(request):
-    if request.method == 'GET':
-        data = Footprint.objects.filter(user=request.user)
-        return HttpResponse(serializers.serialize('json', data),
-            content_type='application/json')
+    data = Footprint.objects.filter(user=request.user)
+    return HttpResponse(json.dumps(list(data), indent=4, default=str), content_type="application/json")
 
 def add_footprint(request):
     if request.method == 'POST':
