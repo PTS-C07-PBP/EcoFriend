@@ -1,5 +1,5 @@
 function refreshHistory() {
-  $.getJSON("/tracker/get_data", function (data) {
+  $.getJSON("/tracker/show_json", function (data) {
     var history = '';
 
     $.each(data, function (key, value) {
@@ -21,7 +21,7 @@ function refreshHistory() {
 function addData() {
   $.ajax({
     method:'POST',
-    url:"/tracker/create_data",
+    url:"/tracker/add_footprint",
     data:{
       csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
       mileage:$('#mileage').val(),
