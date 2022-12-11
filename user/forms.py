@@ -40,5 +40,3 @@ class RegistrationForm(UserCreationForm):
         
 
         # return user
-
-

@@ -15,7 +15,8 @@ from tracker.models import Footprint
 from caloriesburned.models import Person, Motive
 from .forms import userWeight, addMotive
 from django.core import serializers
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
 # Create your views here.
 def show_caloriesburned(request):
     if request.user.is_authenticated:
@@ -81,6 +82,10 @@ def get_last_submit(request):
 
 def show_json(request):
     data = Motive.objects.all()
+    return HttpResponse(serializers.serialize('json', data))
+
+def show_json_person(request):
+    data = Person.objects.all()
     return HttpResponse(serializers.serialize('json', data))
 
 

@@ -86,5 +86,3 @@ def show_comment(request):
     data = Notes.objects.all()
     print(data)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
-
-
