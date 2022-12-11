@@ -84,6 +84,10 @@ def show_json(request):
     data = Motive.objects.all()
     return HttpResponse(serializers.serialize('json', data))
 
+def show_json_person(request):
+    data = Person.objects.all()
+    return HttpResponse(serializers.serialize('json', data))
+
 
 def calories_chart(request):
     date = []

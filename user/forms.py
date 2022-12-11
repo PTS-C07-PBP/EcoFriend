@@ -7,20 +7,19 @@ from django.contrib.auth.forms import UserCreationForm
 
 # Form membuat User
 class RegistrationForm(UserCreationForm):
-    # CHOICES=[('admin','Admin'),
-        #  ('ecouser','EcoUser')]
+    CHOICES=[('admin','Admin'),
+         ('ecouser','EcoUser')]
     
     # user_id = forms.IntegerField()
     email = forms.EmailField(required=True)
     username = forms.CharField(max_length=20, required=True)
     first_name = forms.CharField(max_length=20, label="First Name")
     last_name = forms.CharField(max_length=20, label="Last Name")
-    # user_role = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label="Role")
-    # print(user_role)
+    user_role = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label="Role")
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'user_role']
     
     # def save(self, commit=True):
         
@@ -41,5 +40,3 @@ class RegistrationForm(UserCreationForm):
         
 
         # return user
-
-
