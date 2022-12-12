@@ -13,7 +13,7 @@ from .forms import CommentForm
 
 # Create your views here.
 
-
+@login_required(login_url='/user/login/')
 def show_leaderboard(request):
     form = CommentForm()
 
@@ -38,7 +38,7 @@ def show_leaderboard(request):
     }
     return render(request, 'leaderboard.html', context)
 
-
+@login_required(login_url='/user/login/')
 def show_json(request):
     form = CommentForm()
 
@@ -91,20 +91,8 @@ def add_comment(request):
         })
     return render(request, 'leaderboard.html', {})
 
+@login_required(login_url='/user/login/')
 def show_comment(request):
     data = Comment.objects.all()
     print(data)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
-
-def show_json2(request):
-    datalist = []
-    itemsum = Footprint.objects.all()
-    for item in itemsum:
-        datalist.append({
-            "rank" : str(item.to_order),
-            "user": str(item.user),
-            "mileage": int(item.mileage),
-            "carbon": str(item.carbon),
-        })
-    
-    return JsonResponse(datalist, safe=False)
