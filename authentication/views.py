@@ -41,39 +41,55 @@ def logout_user(request):
     }, status=200)
 
 
+# @csrf_exempt
+# def register(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+
+#         email = data["email"]
+#         username = data["username"]
+#         first_name = data["first_name"]
+#         last_name = data["last_name"]
+#         password1 = data["password1"]
+#         password2 = data["password2"]
+#         user_role = data["user_role"]
+
+#         createNewUser = UserModel.objects.create_user(
+#         username = username, 
+#         email = email,
+#         first_name = first_name,
+#         last_name = last_name,
+#         password = password1,
+#         )
+
+#         if UserModel.objects.filter(username=username).exists():
+#             return JsonResponse({"status": "duplicate"}, status=401)
+
+#         if password1 != password2:
+#             return JsonResponse({"status": "pass failed"}, status=401)
+
+#         createNewUser.save()
+#         return JsonResponse({
+#             "status": "success",
+#             'message': 'User successfully registered',
+#         }, status=200)
+#     return JsonResponse({
+#         "status": "error",
+#         'message': 'Something went wrong',
+#     }, status=400)
+
 @csrf_exempt
 def register(request):
+    form = RegistrationForm()
     if request.method == 'POST':
-        data = json.loads(request.body)
-
-        email = data["email"]
-        username = data["username"]
-        first_name = data["first_name"]
-        last_name = data["last_name"]
-        password1 = data["password1"]
-        password2 = data["password2"]
-        user_role = data["user_role"]
-
-        createNewUser = UserModel.objects.create_user(
-        username = username, 
-        email = email,
-        first_name = first_name,
-        last_name = last_name,
-        password = password1,
-        )
-
-        if UserModel.objects.filter(username=username).exists():
-            return JsonResponse({"status": "duplicate"}, status=401)
-
-        if password1 != password2:
-            return JsonResponse({"status": "pass failed"}, status=401)
-
-        createNewUser.save()
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                "status": "success",
+                'message': 'User successfully registered',
+            }, status=200)
         return JsonResponse({
-            "status": "success",
-            'message': 'User successfully registered',
-        }, status=200)
-    return JsonResponse({
-        "status": "error",
-        'message': 'Something went wrong',
-    }, status=400)
+            "status": "error",
+            'message': 'Something went wrong',
+        }, status=400)
