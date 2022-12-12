@@ -13,31 +13,32 @@ from .forms import CommentForm
 
 # Create your views here.
 
-
 def show_leaderboard(request):
+    if request.user.is_authenticated:
+        form = CommentForm()
+
+        data = []
+        User = get_user_model()
+        comment = Comment.objects.all()
+        user_list = User.objects.all()
+        for user1 in user_list:
+            tracker = Footprint.objects.filter(user=user1.pk)
+            sum_mileage = 0
+            sum_carbon = 0
+            for fp in tracker:
+                sum_mileage += fp.mileage
+                sum_carbon += fp.carbon
+            if sum_mileage:
+                data.append([user1, sum_carbon/sum_mileage, sum_mileage, sum_carbon])
+        data.sort(key=lambda x: x[1])
+        context = {
+            'list': data,
+            'form': form,
+            'comments': comment
+        }
+        return render(request, 'leaderboard.html', context)
     form = CommentForm()
-
-    data = []
-    User = get_user_model()
-    comment = Comment.objects.all()
-    user_list = User.objects.all()
-    for user1 in user_list:
-        tracker = Footprint.objects.filter(user=user1.pk)
-        sum_mileage = 0
-        sum_carbon = 0
-        for fp in tracker:
-            sum_mileage += fp.mileage
-            sum_carbon += fp.carbon
-        if sum_mileage:
-            data.append([user1, sum_carbon/sum_mileage, sum_mileage, sum_carbon])
-    data.sort(key=lambda x: x[1])
-    context = {
-        'list': data,
-        'form': form,
-        'comments': comment
-    }
-    return render(request, 'leaderboard.html', context)
-
+    return render(request, 'denied.html', {'form': form})
 
 def show_json(request):
     form = CommentForm()
@@ -91,20 +92,8 @@ def add_comment(request):
         })
     return render(request, 'leaderboard.html', {})
 
+@login_required(login_url='/user/login/')
 def show_comment(request):
     data = Comment.objects.all()
     print(data)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
-
-def show_json2(request):
-    datalist = []
-    itemsum = Footprint.objects.all()
-    for item in itemsum:
-        datalist.append({
-            "rank" : str(item.to_order),
-            "user": str(item.user),
-            "mileage": int(item.mileage),
-            "carbon": str(item.carbon),
-        })
-    
-    return JsonResponse(datalist, safe=False)
