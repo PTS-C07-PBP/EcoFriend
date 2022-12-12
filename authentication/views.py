@@ -93,3 +93,15 @@ def register(request):
             "status": "error",
             'message': 'Something went wrong',
         }, status=400)
+
+def user_profile(request):
+    user = request.user
+
+    context = {
+        'username' : user,
+        'first_name' : user.first_name,
+        'last_name' : user.last_name,
+        'email' : user.email,
+    }
+
+    return JsonResponse({'data':context})
