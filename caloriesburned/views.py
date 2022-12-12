@@ -67,6 +67,19 @@ def add_motive(request):
             )
 
 @csrf_exempt
+def add_person(request):
+    if request.method == 'POST':
+        form = userWeight(request.POST)
+        if form.is_valid():
+            temp = form.cleaned_data["weight"]
+            person = Person.objects.create(user=request.user, weight=temp)
+            response = serializers.serialize('json', [person])
+            return JsonResponse(
+                response, safe=False,
+            )
+
+
+@csrf_exempt
 def get_motive(request):
     if request.method == 'GET':
         data = Motive.objects.all()
