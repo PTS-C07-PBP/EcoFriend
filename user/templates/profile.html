@@ -23,6 +23,22 @@
     </div>
   </div>
   
+  <div class="container center mt-4 pt-4 mb-4 pb-4">
+    <form id="form" onsubmit="return false;" method="POST" id="addNote">
+      {% csrf_token %}
+      <label>Add your notes to improve!</label><br>
+  
+      <div class="mb-3">
+        <textarea class="form-control" id="my-note" name="my-note" rows="3"></textarea>
+      </div>
+      <br>
+      <input class="btn" id="button" type="submit" value="Add" onclick="addNotes()">
+    </form>
+  </div>
+
+  <div class="card-deck" id="note-deck" name="note-deck" max-width:"100%" width="50%">
+  </div>
+
   {% else %}
   <div class="container center mt-4 pt-4 mb-4 pb-4">
     <h1 style="margin-top: 60px;">Login and be an EcoFriend!</span></h1>
