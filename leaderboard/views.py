@@ -53,8 +53,6 @@ def show_json(request):
         sum_mileage = 0
         sum_carbon = 0
 
-
-
         for fp in tracker:
             sum_mileage += fp.mileage
             sum_carbon += fp.carbon
@@ -66,8 +64,8 @@ def show_json(request):
         data2.append({
             'rank': i,
             'nama': data[i][0].username,
-            'mileage': sum_mileage,
-            'footprint' : sum_carbon,
+            'mileage': data[i][2],
+            'footprint' : data[i][3],
 
         })
 
