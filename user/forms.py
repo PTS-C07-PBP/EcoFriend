@@ -16,7 +16,6 @@ class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=20, label="First Name")
     last_name = forms.CharField(max_length=20, label="Last Name")
     user_role = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label="Role")
-    print(user_role)
 
     class Meta:
         model = User
@@ -41,5 +40,3 @@ class RegistrationForm(UserCreationForm):
         
 
         # return user
-
-

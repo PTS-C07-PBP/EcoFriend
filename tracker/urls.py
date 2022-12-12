@@ -1,10 +1,10 @@
 from django.urls import path
-from tracker.views import add_footprint, show_history, tracker
+from tracker.views import add_footprint, show_json, tracker
 
 app_name = 'tracker'
 
 urlpatterns = [
     path('', tracker, name='index'),
-    path('get_data', show_history, name='show_history'),
-    path('create_data', add_footprint, name='add_footprint'),
+    path('show_json', show_json, name='show_json'),
+    path('add_footprint', add_footprint, name='add_footprint'),
 ]

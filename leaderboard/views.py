@@ -15,31 +15,67 @@ from .forms import CommentForm
 
 
 def show_leaderboard(request):
-    if request.user.is_authenticated:
-        form = CommentForm()
-
-        data = []
-        User = get_user_model()
-        comment = Comment.objects.all()
-        user_list = User.objects.all()
-        for user1 in user_list:
-            tracker = Footprint.objects.filter(user=user1.pk)
-            sum_mileage = 0
-            sum_carbon = 0
-            for fp in tracker:
-                sum_mileage += fp.mileage
-                sum_carbon += fp.carbon
-            if sum_mileage:
-                data.append([user1, sum_carbon/sum_mileage, sum_mileage, sum_carbon])
-        data.sort(key=lambda x: x[1])
-        context = {
-            'list': data,
-            'form': form,
-            'comments': comment
-        }
-        return render(request, 'leaderboard.html', context)
     form = CommentForm()
-    return render(request, 'denied.html', {'form': form})
+
+    data = []
+    User = get_user_model()
+    comment = Comment.objects.all()
+    user_list = User.objects.all()
+    for user1 in user_list:
+        tracker = Footprint.objects.filter(user=user1.pk)
+        sum_mileage = 0
+        sum_carbon = 0
+        for fp in tracker:
+            sum_mileage += fp.mileage
+            sum_carbon += fp.carbon
+        if sum_mileage:
+            data.append([user1, sum_carbon/sum_mileage, sum_mileage, sum_carbon])
+    data.sort(key=lambda x: x[1])
+    context = {
+        'list': data,
+        'form': form,
+        'comments': comment
+    }
+    return render(request, 'leaderboard.html', context)
+
+
+def show_json(request):
+    form = CommentForm()
+
+    data = []
+    User = get_user_model()
+    comment = Comment.objects.all()
+    user_list = User.objects.all()
+    data2 = []
+    for user1 in user_list:
+        tracker = Footprint.objects.filter(user=user1.pk)
+        sum_mileage = 0
+        sum_carbon = 0
+
+
+
+        for fp in tracker:
+            sum_mileage += fp.mileage
+            sum_carbon += fp.carbon
+        if sum_mileage:
+            data.append([user1, sum_carbon/sum_mileage, sum_mileage, sum_carbon])
+    data.sort(key=lambda x: x[1])
+
+    for i in range(len(data)):
+        data2.append({
+            'rank': i,
+            'nama': data[i][0].username,
+            'mileage': sum_mileage,
+            'footprint' : sum_carbon,
+
+        })
+
+    context = {
+        'list': data,
+        'form': form,
+        'comments': comment
+    }
+    return JsonResponse(data2, status =200, safe=False)
 
 @login_required
 def add_comment(request):
@@ -60,22 +96,15 @@ def show_comment(request):
     print(data)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
-def show_json(request):
-    data = Comment.objects.all()
-    return HttpResponse(serializers.serialize('json', data))
-
-def show_json_footprint(request):
-    data = Footprint.objects.all()
-    return HttpResponse(serializers.serialize('json', data))
-
-def show_json_user_detail(request):
-    data = []
-    for items in Footprint.objects.filter(user=request.user):
-        data.append({
-            "Rank" : str(items.to_order),
-            "Name": str(items.user),
-            "Mileage": int(items.mileage),
-            "Footprint": str(items.carbon),
+def show_json2(request):
+    datalist = []
+    itemsum = Footprint.objects.all()
+    for item in itemsum:
+        datalist.append({
+            "rank" : str(item.to_order),
+            "user": str(item.user),
+            "mileage": int(item.mileage),
+            "carbon": str(item.carbon),
         })
-
-    return JsonResponse(data, safe=False)
+    
+    return JsonResponse(datalist, safe=False)

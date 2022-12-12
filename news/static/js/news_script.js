@@ -15,6 +15,7 @@ function makeArticle(article) {
 
 // Menambah 10 article dan pagination
 function add_articles(page_num) {
+    $('#page_num').html(page_num);
     $.get("/news/articles/", {'region':$('#id_filter_region').val(), 'page_num':page_num}, function(data) {
         $('#articles').html('');
         $.each(data[0], function(index, article) {

@@ -34,24 +34,26 @@ Sebagai solusi dari permasalahan tersebut, kami merencanakan pembuatan aplikasi 
     Dikerjakan oleh: Farel
 
 4. Calories burned (Person health condition) 
-    Penjelasan singkat: Menampilkan jumlah kalori terbakar yang penyajian data nantinya akan disertai dengan data rata-rata kalori yang dikeluarkan orang setiap harinya. Fitur ini bertujuan untuk memberikan motivasi bagi para user yang sudah ikut berpartisipasi mengurangi jejak karbon dengan berjalan kaki atau mengendarai sepeda.   
+    Penjelasan singkat: Menampilkan jumlah kalori terbakar berdasarkan jarak yang diinput pada fitur tracker jika user berjalan kaki. Fitur ini juga menampilkan dan menginput motivasi yang dapat berasal dari user lainnya. Fitur ini bertujuan untuk memberikan motivasi bagi para user yang sudah ikut berpartisipasi mengurangi jejak karbon dengan berjalan kaki.   
     Dikerjakan oleh: Valencius
 
 5. User 
+    Penjelasan singkat: Bagian yang untuk menginput data untuk mendaftar sebagai pengguna dan kemudian akan menampilkan data diri yang tadi sudah dimasukkan.  
+    Dikerjakan oleh: Kaylee
+
+6. App Review dan nambahin review kita
     Penjelasan singkat: Menampilkan review app dari para pengguna. Pada bagian ini, pengguna juga dapat  memberikan review langsung lewat app.  
     Dikerjakan oleh: Syifa
 
 **Role:**
-1. Admin
-- Dapat menambahkan artikel pada halaman news
 
-2. User Login
+1. User Login
 - Dapat mengakses form carbon footprint tracker 
 - Dapat melihat data diri, status level, dan hal-hal lain berkaitan dengan akun milik user
 - Dapat mengakses fitur calories burned
 - Dapat mengisi form app review dan melihat review
 - Dapat melihat dan ikut serta dalam fitur Ranking
 
-3. User Belum Login
+2. User Belum Login
 - Dapat mengakses News about Current Environmental Issues
 - Dapat melihat review yang sudah ada di halaman review
