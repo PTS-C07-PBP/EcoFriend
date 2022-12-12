@@ -75,7 +75,7 @@ def show_json(request):
         'form': form,
         'comments': comment
     }
-    return JsonResponse(data2, status =200, safe=False)
+    return JsonResponse(data2,comment, status =200, safe=False)
 
 @login_required
 def add_comment(request):
