@@ -95,12 +95,16 @@ def register(request):
 
 def user_profile(request):
     user = request.user
+    username = user.username
+    first_name = user.first_name
+    last_name = user.last_name
+    email = user.email
 
     context = {
-        'username' : user,
-        'first_name' : user.first_name,
-        'last_name' : user.last_name,
-        'email' : user.email,
+        'username' : username,
+        'first_name' : first_name,
+        'last_name' : last_name,
+        'email' : email,
     }
 
     return JsonResponse({'data':context})
