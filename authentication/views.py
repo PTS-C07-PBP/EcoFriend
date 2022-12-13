@@ -25,7 +25,6 @@ def login_user(request):
             "status": False,
             "message": "Failed to Login, Account Disabled."
             }, status=401)
-
     else:
         return JsonResponse({
         "status": False,
